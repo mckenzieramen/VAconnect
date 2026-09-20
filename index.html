@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="VA CONNECT — Find your next VA opportunity. Discover, preview, visit, apply and track opportunities.">
+<meta name="theme-color" content="#020b18">
+<title>VA CONNECT — Find Your Next VA Opportunity</title>
+<link rel="icon" type="image/png" href="va-connect-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page-glow glow-a"></div><div class="page-glow glow-b"></div>
+<div class="progress" id="progress"></div>
+
+<header class="site-header" id="header">
+  <a class="brand" href="#home" aria-label="VA CONNECT home">
+    <img src="va-connect-logo.png" alt="VA CONNECT logo">
+    <span><strong>VA CONNECT</strong><small>Your Next Opportunity Awaits</small></span>
+  </a>
+  <nav id="nav" aria-label="Primary navigation">
+    <a href="#home">Home</a>
+    <a class="active" href="#directory">Get Hired</a>
+    <a href="#discover">Discover</a>
+    <a href="#track">Track Applications</a>
+    <a href="#resources">Resources</a>
+    <a href="#about">About</a>
+  </nav>
+  <div class="header-actions">
+    <button class="icon-btn" id="headerSearchBtn" aria-label="Focus search">⌕</button>
+    <button class="outline-btn" id="signInBtn" type="button">Sign In</button>
+    <button class="create-btn" id="createAccountBtn" type="button">Create Account</button>
+  </div>
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="eyebrow">EXPLORE OPPORTUNITIES</div>
+    <h1>Find Your Next <span>VA Opportunity</span></h1>
+    <p>Discover trusted VA agencies, remote work platforms, and global opportunities — all in one place.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="stat-icon">▣</span><div><strong id="heroTotal">118+</strong><small>Opportunities</small></div></div>
+      <div class="hero-stat"><span class="stat-icon star">★</span><div><strong id="heroApplied">0</strong><small>Applications</small></div></div>
+      <div class="hero-stat"><span class="stat-icon">▦</span><div><strong id="heroInterview">0</strong><small>Interviews</small></div></div>
+      <div class="hero-stat"><span class="stat-icon trophy">♛</span><div><strong id="heroOffer">0</strong><small>Offers</small></div></div>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <img src="assets/hero-worker.png" alt="">
+    <div class="hero-slogan">“More<br><b>Opportunities</b><br>A Brighter You”<i></i></div>
+  </div>
+</section>
+
+<section class="directory" id="directory">
+  <div class="toolbar" id="discover">
+    <label class="search-field"><span>⌕</span><input id="searchInput" type="search" placeholder="Search agencies (e.g. Ataraxis, Wing, Athena...)" aria-label="Search opportunities" autocomplete="off"></label>
+    <select id="regionFilter" aria-label="Filter by region"><option value="">◉ &nbsp; All Regions</option></select>
+    <select id="roleFilter" aria-label="Filter by role"><option value="">▣ &nbsp; All Roles</option></select>
+    <select id="statusFilter" aria-label="Filter by status"><option value="">▥ &nbsp; All Status</option><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select>
+    <select id="sortFilter" aria-label="Sort opportunities"><option value="recommended">↕ &nbsp; Sort</option><option value="az">A–Z</option><option value="za">Z–A</option><option value="newest">Newest</option></select>
+  </div>
+
+  <div class="results-head">
+    <strong id="resultCount">118 opportunities found</strong>
+    <span>☁ <span id="saveIndicator">Your progress is saved automatically</span></span>
+  </div>
+
+  <div class="agency-grid" id="agencyGrid"></div>
+  <div class="empty-state" id="emptyState" hidden><div>⌕</div><h3>No opportunities found</h3><p>Try a different search or filter.</p></div>
+</section>
+
+<section class="utility-strip" id="track">
+  <div><span class="mini-icon">↗</span><strong>Track your progress</strong><small>Saved, Applied, Interview and Offer stages stay connected to your opportunity cards.</small></div>
+  <div><span class="mini-icon">✓</span><strong>Keep everything in one place</strong><small>Search the directory, preview an opportunity, then open the official application page.</small></div>
+  <div><span class="mini-icon">∞</span><strong>Built for 118 → 500+</strong><small>The cards are rendered from the opportunity data so the directory can keep growing.</small></div>
+</section>
+
+<section class="about-section" id="about">
+  <div><span class="eyebrow">VA CONNECT</span><h2>Your Next Opportunity Awaits.</h2><p>A premium visual workspace for discovering virtual assistant agencies and organizing your application journey.</p></div>
+</section>
+<section id="resources" class="sr-only"></section>
+</main>
+
+<footer><div class="brand footer-brand"><img src="va-connect-logo.png" alt="VA CONNECT"><span><strong>VA CONNECT</strong><small>Your Next Opportunity Awaits</small></span></div><span>© 2026 VA CONNECT</span></footer>
+
+<div class="modal" id="agencyModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close preview">×</button>
+    <div class="modal-top">
+      <div class="modal-brand"><div class="modal-favicon" id="modalFavicon">VA</div><div><span class="eyebrow">OPPORTUNITY</span><h2 id="modalTitle">Agency</h2></div></div>
+      <span class="status-badge" id="modalStatus">NOT STARTED</span>
+    </div>
+    <div class="website-preview">
+      <div class="preview-browser"><span class="browser-dots">● ● ●</span><small id="modalUrl">website</small></div>
+      <iframe id="websiteFrame" title="Website preview" loading="lazy"></iframe>
+      <div class="frame-fallback" id="frameFallback"><strong>Official preview is protected by the agency website.</strong><span>This site does not allow embedded viewing. Use Visit / Apply to open it directly.</span></div>
+    </div>
+    <div class="modal-details">
+      <div><span>REACH</span><strong id="modalRegion"></strong></div>
+      <div><span>ROLES</span><strong id="modalRoles"></strong></div>
+      <div><span>ELIGIBILITY</span><strong id="modalEligibility"></strong></div>
+    </div>
+    <div class="modal-actions"><a class="visit-btn" id="visitBtn" target="_blank" rel="noopener noreferrer">Visit / Apply ↗</a><select id="modalStatusSelect" aria-label="Update opportunity status"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select></div>
+    <label class="notes-label">PERSONAL NOTE<textarea id="modalNote" placeholder="Add a reminder, interview date, follow-up, salary note, or anything you want to remember..."></textarea></label>
+  </div>
+</div>
+
+<div class="auth-modal" id="authModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-auth></div>
+  <div class="auth-panel"><button class="modal-close" data-close-auth aria-label="Close">×</button><span class="eyebrow">VA CONNECT</span><h2 id="authTitle">Sign In</h2><p>Account access is available in the existing VA CONNECT workspace.</p><button class="visit-btn" data-close-auth>Continue</button></div>
+</div>
+
+<script src="agencies.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
