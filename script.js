@@ -148,7 +148,7 @@ function cardBanner(a,index){
   const logo=logoFor(a);
   const logoMarkup=logo
     ? `<span class="cover-logo-mark has-image"><img src="${escapeHtml(logo)}" alt="${escapeHtml(a.name)} official logo" loading="lazy"></span>`
-    : `<span class="cover-logo-mark text-only">${escapeHtml(brandMark(a.name))}</span>`;
+    : `<span class="cover-logo-mark text-only" aria-hidden="true"><span class="generic-brand-icon">✦</span></span>`;
   return `<div class="card-banner ${theme}" data-agency="${a.id}">
     <div class="banner-badge ${theme}"><span>✓</span>#${String(index+1).padStart(2,'0')}</div>
     <span class="banner-status">${escapeHtml(getRecord(a.id).status)}</span>
@@ -234,14 +234,14 @@ function openPreview(id){
   $('#modalNote').value=r.note||'';
   $('#visitBtn').href=activeAgency.url;
   const frame=$('#websiteFrame'), fallback=$('#frameFallback');
-  fallback.classList.remove('show'); clearTimeout(frameTimer);
+  clearTimeout(frameTimer);
   frame.src='about:blank';
-  setTimeout(()=>{frame.src=activeAgency.url;},20);
-  frame.onload=()=>{clearTimeout(frameTimer);fallback.classList.remove('show')};
-  frameTimer=setTimeout(()=>fallback.classList.add('show'),3200);
+  frame.style.display='none';
+  fallback.classList.add('show');
+  fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>VA CONNECT preview. The official site opens securely in a new tab so blocked iframe pages never appear here.</span>`;
   $('#agencyModal').classList.add('open');$('#agencyModal').setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
 }
-function closePreview(){clearTimeout(frameTimer);$('#websiteFrame').src='about:blank';$('#agencyModal').classList.remove('open');$('#agencyModal').setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');activeAgency=null}
+function closePreview(){clearTimeout(frameTimer);$('#websiteFrame').src='about:blank';$('#websiteFrame').style.display='none';$('#agencyModal').classList.remove('open');$('#agencyModal').setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');activeAgency=null}
 function populateFilters(){
   const regions=new Set(), roles=new Set();
   (window.VA_AGENCIES||[]).forEach(a=>{

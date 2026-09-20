@@ -19,6 +19,7 @@ window.VA_AGENCY_LOGOS = {
   "19": "assets/agency-logos/logo-prialto.webp",
   "20": "assets/agency-logos/images.jpg",
   "21": "assets/agency-logos/ho-logo.svg",
+  "22": "assets/agency-logos/Asset-1_4x-1-1024x227.webp",
   "23": "assets/agency-logos/Valatam.webp",
   "24": "assets/agency-logos/Horizontal-logo-1080x1080-color@2x-600x126-1-Photoroom.webp",
   "25": "assets/agency-logos/South.svg",
@@ -41,6 +42,7 @@ window.VA_AGENCY_LOGOS = {
   "46": "assets/agency-logos/DocVA.webp",
   "47": "assets/agency-logos/helpsquad-health-horizontal.svg",
   "48": "assets/agency-logos/PENBROTHERS-HORIZONTAL.svg",
+  "49": "assets/agency-logos/HR-Horizontal-Full-Color.png",
   "50": "assets/agency-logos/Go Carpathian.png",
   "51": "assets/agency-logos/pearl talent.png",
   "52": "assets/agency-logos/Virtual Coworker.webp",
@@ -85,7 +87,5 @@ window.VA_AGENCY_LOGOS = {
   "93": "assets/agency-logos/iWorker.webp",
   "94": "assets/agency-logos/Summit VA Solutions.webp",
   "95": "assets/agency-logos/Upwork.jpg",
-  "104": "assets/agency-logos/remote co worker.svg"
-  "22": "assets/agency-logos/Asset-1_4x-1-1024x227.webp",
-  "49": "assets/agency-logos/HR-Horizontal-Full-Color.png",
+  "104": "assets/agency-logos/remote co worker.svg",
 };
