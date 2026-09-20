@@ -1,40 +1,22 @@
-# VA CONNECT — Interactive Opportunity Directory v3
+# VA CONNECT — v4
 
-## Branding
-- VA CONNECT
-- Connect. Delegate. Elevate.
-- VA CONNECT logo included as `va-connect-logo.png`
+## Safe Edit Update
 
-## Directory
-- Imports all 118 entries from the supplied Global VA Agencies workbook.
-- Search by agency, role, region, scope, or eligibility text.
-- Filter by applicant scope, region, and application status.
-- Each opportunity uses a cover-first visual card inspired by the approved VA CONNECT design direction.
-- The **Visit / Apply** button opens the listed official website/careers URL in a new tab.
-- The **Details** action opens a focused details panel with eligibility, reach, roles, notes, and tracking controls.
+This build preserves the approved VA CONNECT v3 visual direction and fixes the root cause of the blank/non-navigable page: the JavaScript/data files were not loaded by `index.html`.
 
-## Application tracking
-Statuses:
-- Not Started
-- Saved
-- Applied
-- Interview
-- Offer
-- Rejected
-- Not Eligible
+### Preserved
+- VA CONNECT branding and logo
+- Cover-first opportunity cards
+- 118-opportunity directory
+- Search and filters
+- Visit / Apply links
+- Details modal
+- Application status tracking
+- Notes
+- Local account sign-in/register UI
+- Responsive navigation and mobile layout
 
-Notes and status changes are persisted in browser storage. Signed-in users get a separate local tracker namespace per email.
-
-## Account feature
-- Sign In and Create Account UI included.
-- Email/password is hashed with Web Crypto before local storage.
-- Session is kept locally on the device.
-- This is intentionally a lightweight client-side account feature, not server-side authentication. For production authentication across devices, connect the same UI to Firebase Authentication or another backend later.
-
-## Deployment
-Static HTML/CSS/JS. Cloudflare Pages settings:
-- Project: `roadvaconnect`
-- Branch: `main`
-- Framework: None
-- Build command: blank
-- Output directory: `/`
+### Fixed
+- `agencies.js` is now loaded before the application script.
+- `script.js` is now loaded at the end of the document so all DOM elements exist before initialization.
+- Existing functionality is preserved; no unrelated redesign or data changes were made.
