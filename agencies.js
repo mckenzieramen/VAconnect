@@ -25,7 +25,7 @@ window.VA_AGENCIES = [
     "region": "Philippines",
     "scope": "PH-focused",
     "roles": "Executive Assistant",
-    "url": "https://jobs.athenago.com/",
+    "url": "https://jobs.athena.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -105,7 +105,7 @@ window.VA_AGENCIES = [
     "region": "USA / Europe",
     "scope": "US/Europe-focused",
     "roles": "EA, project management, social media",
-    "url": "https://boldly.com/careers/",
+    "url": "https://boldly.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -295,7 +295,7 @@ window.VA_AGENCIES = [
     "region": "Philippines / Australia",
     "scope": "Multi-region",
     "roles": "VA, finance, healthcare, IT",
-    "url": "https://cloudstaff.com/careers/",
+    "url": "https://jobs.cloudstaff.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -365,7 +365,7 @@ window.VA_AGENCIES = [
     "region": "Europe / Philippines",
     "scope": "Multi-region",
     "roles": "EA, payroll, accounting, BI",
-    "url": "https://www.stariatalent.com/",
+    "url": "https://www.futureworkplaces.fi/en/company/staria/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -405,7 +405,7 @@ window.VA_AGENCIES = [
     "region": "Philippines",
     "scope": "PH-focused",
     "roles": "Real estate, ecommerce, EA, lead gen",
-    "url": "https://stealthagents.com/careers/",
+    "url": "https://stealthagents.com/contact-us",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -445,7 +445,7 @@ window.VA_AGENCIES = [
     "region": "Philippines / Romania / USA",
     "scope": "Multi-region",
     "roles": "Customer support, finance, content, AI",
-    "url": "https://www.supportninja.com/careers",
+    "url": "https://www.supportninja.com",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -475,7 +475,7 @@ window.VA_AGENCIES = [
     "region": "Philippines",
     "scope": "PH-focused",
     "roles": "Finance, executive support, tech",
-    "url": "https://penbrothers.com/careers/",
+    "url": "https://penbrothers.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -565,7 +565,7 @@ window.VA_AGENCIES = [
     "region": "Philippines / India / USA / Mexico / Greece / Colombia / other",
     "scope": "Multi-region",
     "roles": "Customer experience, compliance, support",
-    "url": "https://www.taskus.com/careers/",
+    "url": "https://www.taskus.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -595,7 +595,7 @@ window.VA_AGENCIES = [
     "region": "Philippines",
     "scope": "PH-focused",
     "roles": "Mortgage, financial planning, bookkeeping",
-    "url": "https://www.vaplatinum.com.au/",
+    "url": "https://www.vaplatinum.com.au/ph",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -795,7 +795,7 @@ window.VA_AGENCIES = [
     "region": "India",
     "scope": "India-focused",
     "roles": "Admin, IT, content, social media, bookkeeping",
-    "url": "https://mytasker.com/career",
+    "url": "https://mytasker.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -825,7 +825,7 @@ window.VA_AGENCIES = [
     "region": "Philippines",
     "scope": "PH-focused",
     "roles": "Customer support, EA, admin, social media",
-    "url": "https://peppervirtualassistant.com/",
+    "url": "http://peppervirtualassistant.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -975,7 +975,7 @@ window.VA_AGENCIES = [
     "region": "India",
     "scope": "India-focused",
     "roles": "Marketing, SEO, design, tech",
-    "url": "https://www.uplers.com/careers/",
+    "url": "https://www.uplers.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -1045,7 +1045,7 @@ window.VA_AGENCIES = [
     "region": "UK / Europe",
     "scope": "UK/Europe-focused",
     "roles": "PA, EA, admin, bookkeeping",
-    "url": "https://smartpa.co.uk/careers/",
+    "url": "https://smart-pa.com/",
     "eligibility": "Check the individual vacancy for country eligibility.",
     "statusNote": "Directory / verify current openings"
   },
@@ -1075,7 +1075,7 @@ window.VA_AGENCIES = [
     "region": "Global listings",
     "scope": "Global job board",
     "roles": "VA/admin/remote roles",
-    "url": "https://www.flexjobs.com/",
+    "url": "https://www.flexjobs.com/homevariant",
     "eligibility": "Global reach/listing; individual role may still have country restrictions.",
     "statusNote": "Directory / verify current openings"
   },

@@ -98,3 +98,21 @@ Firebase Authentication can provide verified email/password or passwordless emai
 - Preview and application-status dropdown now sit side-by-side on the same row.
 - Visit / Apply is a full-width rectangular action below them.
 - Existing status persistence, tracker routing, and 118 opportunities are preserved.
+
+
+V24: Replaced the BELAY cover logo with the user-supplied official positive logo asset.
+
+
+## V25 URL refresh — 2026-09-20
+- Updated the agency application/website URLs supplied by the user for the current directory entries.
+- Applied the exact user-supplied URLs where an existing agency matched.
+- Ignored the duplicate CrewBloom URL and the VA CONNECT site URL because they are not separate agency records.
+- Corrected the malformed Uplers/SmartPA pasted URL into two separate agency URLs.
+- Preserved all 118 agency records, logos, tracker behavior, card layout, and existing functionality.
+
+### V26 — Supplied Logo Fill
+- Added the latest user-supplied logo pack to `assets/agency-logos/`.
+- Filled previously unmapped cards only where the supplied file matched the agency unambiguously:
+  - BruntWork
+  - VaVa Virtual Assistants
+- Kept unsupported agencies without a verified supplied logo rather than using broken remote images, generated logos, or initials as fake logos.

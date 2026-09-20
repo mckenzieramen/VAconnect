@@ -2,7 +2,7 @@ window.VA_AGENCY_LOGOS = {
   "1": "assets/agency-logos/Ataraxis-Main.png",
   "2": "assets/agency-logos/wing-logo.png",
   "3": "assets/agency-logos/Athena.svg",
-  "4": "assets/agency-logos/Primary-Logo-Positive.webp",
+  "4": "assets/agency-logos/BELAY_logo.webp",
   "5": "assets/agency-logos/MyOutDesk.png",
   "6": "assets/agency-logos/Zirtual_Logo.webp",
   "7": "assets/agency-logos/logo_vl_white.svg",
@@ -86,4 +86,6 @@ window.VA_AGENCY_LOGOS = {
   "94": "assets/agency-logos/Summit VA Solutions.webp",
   "95": "assets/agency-logos/Upwork.jpg",
   "104": "assets/agency-logos/remote co worker.svg"
+  "22": "assets/agency-logos/Asset-1_4x-1-1024x227.webp",
+  "49": "assets/agency-logos/HR-Horizontal-Full-Color.png",
 };
