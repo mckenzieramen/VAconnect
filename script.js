@@ -63,45 +63,45 @@ function logoFor(a){return logoMap[a.id]||null}
 function initials(name){return name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
-function cardBanner(a){
+function cardBanner(a,index){
   const b=bannerMap[a.id]||{};
-  const logo=logoFor(a);
-  const theme=b.theme||(['purple','dark','green'][a.id%3]||'');
-  const headline=b.headline||`${a.name}\\nRemote Opportunities`;
+  const theme=b.theme||(['','wing','purple','green','gold','dark'][a.id]||'');
+  const headline=b.headline||`${a.name}\nRemote Opportunities`;
   const sub=b.sub||`Explore ${roleLabel(a)} opportunities.`;
-  return `<div class="card-banner ${theme}">
+  const verified=a.id<=118;
+  return `<div class="card-banner ${theme}" data-agency="${a.id}">
+    <div class="banner-badge ${theme}"><span>✓</span>#${String(index+1).padStart(2,'0')}</div>
+    <span class="banner-status">${escapeHtml(getRecord(a.id).status)}</span>
     <div class="banner-copy">
-      ${logo?`<img class="banner-logo" src="${logo}" alt="${escapeHtml(a.name)} official logo">`:`<div class="banner-logo official-logo-slot" aria-label="Official logo pending verification">${escapeHtml(a.name)}</div>`}
+      <div class="banner-brand-text">${escapeHtml(a.name)}</div>
       <div class="banner-headline">${escapeHtml(headline).replace(/\\n/g,'<br>')}</div>
       <div class="banner-sub">${escapeHtml(sub)}</div>
+      ${verified?'<span class="banner-verified">Official directory listing</span>':''}
     </div>
-    <div class="banner-visual"></div>
+    <div class="banner-visual" aria-hidden="true">
+      <span class="shape shape-a"></span><span class="shape shape-b"></span><span class="shape shape-c"></span>
+    </div>
   </div>`;
 }
 function cardMarkup(a,index){
   const r=getRecord(a.id), logo=logoFor(a), tags=tagsFor(a);
-  const colors=['','','purple','magenta','green','purple','magenta'];
-  const badgeClass=colors[index%colors.length];
+  const colors=['','','purple','magenta','green','gold','dark'];
+  const badgeClass=colors[a.id%colors.length];
   return `<article class="agency-card" data-id="${a.id}">
-    <div class="card-browser">
-      <div class="browser-left"><span class="browser-dots">● ● ●</span><span class="number-badge ${badgeClass}">#${String(index+1).padStart(3,'0')}</span><span class="domain"><span class="domain-icon">◉</span>www.${escapeHtml(hostname(a.url).replace(/^www\./,''))}</span></div>
-      <button class="favorite ${r.favorite?'active':''}" data-favorite="${a.id}" aria-label="${r.favorite?'Remove from favorites':'Add to favorites'}">${r.favorite?'♥':'♡'}</button>
-    </div>
-    ${cardBanner(a)}
+    ${cardBanner(a,index)}
     <div class="card-body">
       <div class="company-row">
         <div class="company-name">
-          <span class="mini-logo">${logo?`<img src="${logo}" alt="">`:escapeHtml(initials(a.name))}</span>
-          <strong>${escapeHtml(a.name)}</strong><span class="verified">◆</span>
+          <span class="mini-logo">${logo?`<img src="${logo}" alt="${escapeHtml(a.name)} official logo">`:escapeHtml(initials(a.name))}</span>
+          <strong>${escapeHtml(a.name)}</strong><span class="verified" aria-label="Verified directory entry">✓</span>
         </div>
-        <span class="status-pill">${escapeHtml(r.status)}</span>
+        <button class="favorite ${r.favorite?'active':''}" data-favorite="${a.id}" aria-label="${r.favorite?'Remove from favorites':'Add to favorites'}">${r.favorite?'★':'☆'}</button>
       </div>
-      <div class="meta-line"><span>⌖ ${escapeHtml(regionPrimary(a))}</span><span>|</span><span class="role-line">▣ ${escapeHtml(roleLabel(a))}</span></div>
+      <div class="meta-line"><span>● ${escapeHtml(regionPrimary(a))}</span><span>|</span><span class="role-line">${escapeHtml(roleLabel(a))}</span></div>
       <div class="tags">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
       <div class="card-actions">
         <button class="card-btn" data-preview="${a.id}" aria-label="Preview ${escapeHtml(a.name)}">◉ &nbsp;Preview</button>
         <a class="card-btn primary" href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-apply="${a.id}">Visit / Apply ↗</a>
-        <select class="card-status" data-status="${a.id}" aria-label="Status for ${escapeHtml(a.name)}">${statuses.map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select>
       </div>
     </div>
   </article>`;
@@ -169,11 +169,33 @@ function populateFilters(){
   $('#roleFilter').innerHTML='<option value="">▣  All Roles</option>'+[...roles].sort().map(x=>`<option>${escapeHtml(x)}</option>`).join('');
 }
 
+
+// Reference-style navigation: the active cyan pill follows the visible section.
+function updateActiveNav(){
+  const links=$$('#nav a');
+  const sections=[
+    ['#home','home'],['#directory','directory'],['#discover','discover'],
+    ['#track','track'],['#resources','resources'],['#about','about']
+  ];
+  let current='home';
+  const y=window.scrollY+110;
+  sections.forEach(([sel,id])=>{
+    const el=$(sel);
+    if(el && el.offsetTop<=y) current=id;
+  });
+  links.forEach(a=>{
+    const id=(a.getAttribute('href')||'').slice(1);
+    a.classList.toggle('active',id===current);
+    if(id===current) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+  });
+}
+
 const header=$('#header'),progress=$('#progress');
 window.addEventListener('scroll',()=>{
   header.classList.toggle('scrolled',scrollY>15);
   const max=document.documentElement.scrollHeight-innerHeight;
   progress.style.width=(max?scrollY/max*100:0)+'%';
+  updateActiveNav();
 }, {passive:true});
 $('#menuBtn').addEventListener('click',()=>{
   const nav=$('#nav');const open=nav.classList.toggle('mobile-open');$('#menuBtn').textContent=open?'×':'☰';
@@ -195,4 +217,4 @@ $('#modalNote').addEventListener('input',()=>{
   if(!activeAgency)return;getRecord(activeAgency.id).note=$('#modalNote').value;saveState();
 });
 
-populateFilters();renderCards();updateStats();
+populateFilters();renderCards();updateStats();updateActiveNav();

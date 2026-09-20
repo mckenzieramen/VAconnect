@@ -36,3 +36,11 @@ Only verified logo files downloaded from those official sites/official brand-ass
 
 The application will use a verified local logo only when it is explicitly mapped in `logoMap`.
 It will never silently use an old asset, a third-party logo service, a generated logo, or a favicon as an agency logo.
+
+
+## V15 — Reference UI Fidelity Revision (2026-09-20)
+- Applied the supplied VA CONNECT reference layout to the opportunity directory.
+- Removed legacy agency-logo assets from the package; only the official-logo source manifest remains.
+- Opportunity cards now use a consistent screenshot-style structure: promotional banner, number badge, dynamic status badge, company row, favorite control, metadata, tags, Preview, and Visit / Apply.
+- Preserved the data-driven 118-agency architecture, search/filter/sort, status tracking, favorites, preview modal, and external application URLs.
+- Added dynamic navigation active-pill behavior based on the visible section.
