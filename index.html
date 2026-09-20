@@ -98,8 +98,33 @@
     <div class="modal-top"><div class="modal-brand"><div class="modal-favicon" id="modalFavicon">VA</div><div><span class="eyebrow">OPPORTUNITY DETAILS</span><h2 id="modalTitle">Agency</h2></div></div><span class="status-badge" id="modalStatus">NOT STARTED</span></div>
     <div class="detail-cover" id="modalCover"></div>
     <div class="modal-details"><div><span>REACH</span><strong id="modalRegion"></strong></div><div><span>ROLES</span><strong id="modalRoles"></strong></div><div><span>ELIGIBILITY</span><strong id="modalEligibility"></strong></div></div>
-    <div class="modal-actions"><a class="btn primary" id="visitBtn" target="_blank" rel="noopener noreferrer">Visit / Apply ↗</a><select id="modalStatusSelect"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select></div>
+    <div class="modal-actions"><button class="btn primary apply-now-btn" id="modalApplyBtn" type="button">Apply on VA Connect <span>→</span></button><a class="btn ghost" id="visitBtn" target="_blank" rel="noopener noreferrer">Visit Official Site ↗</a><select id="modalStatusSelect"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select></div>
     <label class="notes-label">PERSONAL NOTE<textarea id="modalNote" placeholder="Add a reminder, interview date, follow-up, salary note, or other detail..."></textarea></label>
+  </div>
+</div>
+
+<div class="modal application-modal" id="applicationModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-application></div>
+  <div class="application-panel" role="dialog" aria-modal="true" aria-labelledby="applicationTitle">
+    <button class="modal-close" id="applicationClose" aria-label="Close">×</button>
+    <div class="application-head">
+      <div><span class="eyebrow">VA CONNECT APPLICATION</span><h2 id="applicationTitle">Apply for this opportunity.</h2><p id="applicationSubtitle">Your application will be saved to your VA Connect tracker.</p></div>
+      <span class="application-company" id="applicationCompany">Agency</span>
+    </div>
+    <form id="applicationForm" class="application-form">
+      <div class="application-grid">
+        <label>Full name<input id="applicationName" type="text" autocomplete="name" required placeholder="Your full name"></label>
+        <label>Email<input id="applicationEmail" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+        <label>Phone / WhatsApp<input id="applicationPhone" type="tel" autocomplete="tel" placeholder="+63 ..."></label>
+        <label>Role applying for<input id="applicationRole" type="text" required placeholder="e.g. Virtual Assistant"></label>
+      </div>
+      <label>Resume / portfolio link<input id="applicationResume" type="url" placeholder="https://..." required></label>
+      <label>Availability<select id="applicationAvailability"><option>Immediately</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Within 1 month</option><option>Currently employed</option></select></label>
+      <label>Cover message<textarea id="applicationMessage" rows="5" required placeholder="Introduce yourself and briefly explain why you're a good fit..."></textarea></label>
+      <label class="application-consent"><input id="applicationConsent" type="checkbox" required><span>I confirm that the information above is accurate and I understand that VA Connect records my application; final hiring decisions are made by the agency.</span></label>
+      <div class="application-actions"><button type="button" class="btn ghost" id="applicationVisitBtn">Open Official Site ↗</button><button type="submit" class="btn primary">Submit Application <span>→</span></button></div>
+      <p class="application-message" id="applicationMessage" role="status"></p>
+    </form>
   </div>
 </div>
 

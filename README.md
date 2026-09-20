@@ -20,3 +20,7 @@ This build preserves the approved VA CONNECT v3 visual direction and fixes the r
 - `agencies.js` is now loaded before the application script.
 - `script.js` is now loaded at the end of the document so all DOM elements exist before initialization.
 - Existing functionality is preserved; no unrelated redesign or data changes were made.
+
+
+### v5 application workflow
+Users can submit an in-site application form for each opportunity. The submission is stored with the opportunity tracker in the current browser/account namespace and automatically moves the opportunity to Applied. The official agency link remains available through Visit Official Site.
