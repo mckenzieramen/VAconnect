@@ -123,3 +123,9 @@ V24: Replaced the BELAY cover logo with the user-supplied official positive logo
 - Tracker rows now use the same real logo box instead of initials.
 - Agencies without a supplied local logo now try the agency website favicon from its own official domain.
 - No iframe preview; official sites remain Visit / Apply destinations.
+
+### V29 — Content Restore / Logo Safe Fix
+- Restored the missing `escapeHtml()` helper that was accidentally removed during the logo restoration patch.
+- This was a root-cause JavaScript runtime issue: card rendering could stop before displaying the opportunity content.
+- Preserved the 118 opportunity records, all existing pages, tracker, auth UI, card layout, and logo assets.
+- Preserved the 89 mapped supplied logo assets and official-domain favicon fallback.

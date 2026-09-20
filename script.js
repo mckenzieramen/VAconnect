@@ -133,6 +133,7 @@ function tagsFor(a){
   return tags.slice(0,3);
 }
 function roleLabel(a){return (a.roles||'Virtual Assistant').replace(/\s+/g,' ').trim()}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function officialFavicon(a){
   try{
     const u=new URL(a.url);
