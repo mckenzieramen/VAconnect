@@ -240,10 +240,21 @@ function openPreview(id){
   $('#visitBtn').href=activeAgency.url;
   const frame=$('#websiteFrame'), fallback=$('#frameFallback');
   clearTimeout(frameTimer);
-  frame.src='about:blank';
-  frame.style.display='none';
-  fallback.classList.add('show');
-  fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>VA CONNECT preview. The official site opens securely in a new tab so blocked iframe pages never appear here.</span>`;
+  const previewUrl=`/preview?url=${encodeURIComponent(activeAgency.url)}`;
+  frame.src=previewUrl;
+  frame.style.display='block';
+  frame.setAttribute('aria-hidden','false');
+  fallback.classList.remove('show');
+  fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>Loading the official website preview…</span>`;
+  frame.onload=()=>{clearTimeout(frameTimer);fallback.classList.remove('show');frame.style.display='block';};
+  frame.onerror=()=>{frame.style.display='none';fallback.classList.add('show');fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>The live site could not be rendered inside the preview. Use Visit / Apply to open the official website.</span>`;};
+  frameTimer=setTimeout(()=>{
+    try{
+      if(!frame.contentDocument || !frame.contentDocument.body || !frame.contentDocument.body.innerHTML.trim()){
+        frame.style.display='none';fallback.classList.add('show');fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>The official site is protected from embedded preview. Use Visit / Apply for the full live website.</span>`;
+      }
+    }catch{}
+  },9000);
   $('#agencyModal').classList.add('open');$('#agencyModal').setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
 }
 function closePreview(){clearTimeout(frameTimer);$('#websiteFrame').src='about:blank';$('#websiteFrame').style.display='none';$('#agencyModal').classList.remove('open');$('#agencyModal').setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');activeAgency=null}

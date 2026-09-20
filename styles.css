@@ -410,8 +410,8 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
 .cover-logo-mark.text-only{background:rgba(5,22,39,.82)!important;color:#75dcff!important}
 .generic-brand-icon{font-size:18px;line-height:1;color:#18cfff}
 .website-preview{min-height:300px!important;background:linear-gradient(145deg,#06182a,#071f36 58%,#061323)!important}
-.website-preview iframe{display:none!important}
-.frame-fallback{position:relative!important;inset:auto!important;min-height:268px!important;display:flex!important;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:10px;background:radial-gradient(circle at 50% 20%,rgba(0,217,255,.14),transparent 32%),linear-gradient(145deg,#061a2c,#020b18 72%)!important;color:#dff7ff;padding:26px!important}
+.website-preview iframe{display:block!important;width:100%!important;height:390px!important;border:0!important;background:#fff!important}
+.frame-fallback{position:absolute!important;inset:32px 0 0!important;min-height:268px!important;display:flex!important;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:10px;background:radial-gradient(circle at 50% 20%,rgba(0,217,255,.14),transparent 32%),linear-gradient(145deg,#061a2c,#020b18 72%)!important;color:#dff7ff;padding:26px!important}
 .frame-fallback.show{display:flex!important}
 .preview-logo-box{width:68px;height:68px;border-radius:14px;background:#fff;border:1px solid rgba(109,222,255,.65);display:grid;place-items:center;padding:9px;box-sizing:border-box;box-shadow:0 10px 28px rgba(0,0,0,.3)}
 .preview-logo-box img{width:100%;height:100%;object-fit:contain;border-radius:7px}
