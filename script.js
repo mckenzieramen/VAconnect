@@ -30,10 +30,13 @@ function initials(name){ return name.split(/\s+/).filter(Boolean).slice(0,2).map
 function splitRegions(str){ return str.split('/').map(x=>x.trim()).filter(Boolean); }
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 function coverTheme(id){ return ['cover-ocean','cover-sky','cover-violet','cover-mint','cover-sand','cover-indigo'][((Number(id)||1)-1)%6]; }
-function logoMarkup(a){ return a.name==='Ataraxis' ? '<img class="cover-real-logo" src="ataraxis-main.png" alt="Ataraxis logo">' : `<div class="cover-mini-logo">${escapeHtml(initials(a.name))}</div>`; }
+function logoMarkup(a){
+  if(a.name==='Ataraxis') return '<img class="cover-real-logo" src="ataraxis-main.png" alt="Ataraxis logo">';
+  return `<div class="cover-mini-logo">${escapeHtml(initials(a.name))}</div>`;
+}
 function coverMarkup(a, compact=false){
   const theme=coverTheme(a.id);
-  return `<div class="agency-cover ${theme}"><div class="cover-glow"></div><div class="cover-grid"></div><div class="cover-content">${logoMarkup(a)}<div class="cover-copy"><strong>${escapeHtml(a.name)}</strong><span>${escapeHtml((a.roles||'Virtual Assistant opportunities').split(',').slice(0,2).join(' · '))}</span></div></div><div class="cover-caption">REMOTE OPPORTUNITY</div></div>`;
+  return `<div class="agency-cover ${theme}"><div class="cover-glow"></div><div class="cover-grid"></div><div class="cover-content">${logoMarkup(a)}<div class="cover-copy"><strong>${escapeHtml(a.name)}</strong><span>${escapeHtml((a.roles||'Virtual Assistant opportunities').split(',').slice(0,2).join(' · '))}</span></div></div><div class="cover-caption">WEBSITE PREVIEW</div></div>`;
 }
 
 window.addEventListener('scroll', () => {
@@ -69,17 +72,17 @@ function render(){
   $('#emptyState').hidden=!!list.length;
   list.forEach(a=>{
     const rec=getRecord(a.id), card=document.createElement('article'); card.className='agency-card reveal visible';
-    card.innerHTML=`<button class="agency-cover-button" type="button" data-details="${a.id}" aria-label="View details for ${escapeHtml(a.name)}">${coverMarkup(a)}</button>
+    card.innerHTML=`<button class="agency-cover-button" type="button" data-details="${a.id}" aria-label="View ${escapeHtml(a.name)} preview">${coverMarkup(a)}</button>
       <div class="agency-body"><div class="agency-title"><div><span class="agency-index">#${String(a.id).padStart(3,'0')}</span><h3>${escapeHtml(a.name)}</h3></div><span class="status-pill ${statusClass(rec.status)}">${escapeHtml(rec.status)}</span></div>
       <p class="agency-role">${escapeHtml(a.roles)}</p><div class="agency-tags"><span>${escapeHtml(a.scope)}</span><span>${escapeHtml(splitRegions(a.region)[0]||'Global')}</span></div>
-      <div class="agency-actions"><button class="details-btn preview-btn" data-details="${a.id}" type="button">◉ Preview</button><button class="apply-btn apply-now-card" data-apply="${a.id}" type="button">Apply Now →</button><a class="visit-btn" href="${a.url}" target="_blank" rel="noopener noreferrer">Visit ↗</a><select class="card-status" data-status="${a.id}" aria-label="Application status for ${escapeHtml(a.name)}">${statuses.map(s=>`<option ${s===rec.status?'selected':''}>${s}</option>`).join('')}</select></div></div>`;
+      <div class="agency-actions"><button class="details-btn preview-btn" data-details="${a.id}" type="button">◉ Preview</button><button class="apply-btn apply-now-card" data-apply="${a.id}" type="button">Apply Now ↗</button><a class="visit-btn" href="${a.url}" target="_blank" rel="noopener noreferrer">Visit ↗</a><select class="card-status" data-status="${a.id}" aria-label="Application status for ${escapeHtml(a.name)}">${statuses.map(s=>`<option ${s===rec.status?'selected':''}>${s}</option>`).join('')}</select></div></div>`;
     grid.appendChild(card);
   });
   bindCards();
 }
 function bindCards(){
-  $$('[data-details]').forEach(b=>b.addEventListener('click',()=>openExternalSite(Number(b.dataset.details),'preview')));
-  $$('[data-apply]').forEach(b=>b.addEventListener('click',()=>openExternalSite(Number(b.dataset.apply),'apply')));
+  $$('[data-details]').forEach(b=>b.addEventListener('click',()=>openModal(Number(b.dataset.details))));
+  $$('[data-apply]').forEach(b=>b.addEventListener('click',()=>applyExternally(Number(b.dataset.apply))));
   $$('[data-status]').forEach(s=>s.addEventListener('change',()=>{ const id=Number(s.dataset.status); getRecord(id).status=s.value; saveState(); render(); }));
 }
 
@@ -104,69 +107,15 @@ $('#modalNote').addEventListener('input',e=>{if(!activeAgency)return;getRecord(a
 ['searchInput','scopeFilter','regionFilter','statusFilter'].forEach(id=>$( '#'+id).addEventListener(id==='searchInput'?'input':'change',render));
 $('#resetBtn').addEventListener('click',()=>{$('#searchInput').value='';scopeFilter.value='';regionFilter.value='';$('#statusFilter').value='';render();});
 
-function openExternalSite(id, mode='preview'){
-  externalAgency=VA_AGENCIES.find(a=>a.id===id); if(!externalAgency)return;
-  externalMode=mode;
-  const rec=getRecord(id), modal=$('#externalSiteModal'), frame=$('#externalSiteFrame');
-  $('#externalSiteTitle').textContent=externalAgency.name;
-  $('#externalSiteSubtitle').textContent=mode==='apply' ? 'Official application website' : 'Official website preview';
-  $('#externalSiteEyebrow').textContent=mode==='apply' ? 'APPLY ON OFFICIAL SITE' : 'OPPORTUNITY PREVIEW';
-  $('#externalSiteFavicon').textContent=initials(externalAgency.name);
-  $('#externalSiteUrl').textContent=externalAgency.url;
-  $('#externalSiteStatus').value=rec.status;
-  $('#externalMarkApplied').hidden=mode!=='apply';
-  $('#externalSiteLoading').classList.remove('hidden');
-  frame.src='about:blank';
-  setTimeout(()=>{ frame.src=externalAgency.url; },30);
-  modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('modal-open');
+function applyExternally(id){
+  const agency=VA_AGENCIES.find(a=>a.id===id); if(!agency)return;
+  getRecord(id).status='Applied';
+  saveState();
+  render();
+  window.open(agency.url,'_blank','noopener,noreferrer');
 }
-function closeExternalSite(){
-  const modal=$('#externalSiteModal'), frame=$('#externalSiteFrame');
-  modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('modal-open');
-  frame.src='about:blank'; externalAgency=null;
-}
-$('#externalSiteFrame').addEventListener('load',()=>$('#externalSiteLoading').classList.add('hidden'));
-$('#externalSiteClose').addEventListener('click',closeExternalSite);
-$$('[data-close-external]').forEach(x=>x.addEventListener('click',closeExternalSite));
-$('#externalOpenNew').addEventListener('click',()=>{ if(externalAgency) window.open(externalAgency.url,'_blank','noopener,noreferrer'); });
-$('#externalSiteStatus').addEventListener('change',e=>{ if(!externalAgency)return; getRecord(externalAgency.id).status=e.target.value; saveState(); render(); });
-$('#externalMarkApplied').addEventListener('click',()=>{ if(!externalAgency)return; getRecord(externalAgency.id).status='Applied'; saveState(); render(); $('#externalSiteStatus').value='Applied'; $('#externalMarkApplied').textContent='Applied ✓'; });
 
-function openApplication(id){
-  applicationAgency=VA_AGENCIES.find(a=>a.id===id); if(!applicationAgency)return;
-  const email=currentSession();
-  const account=email ? (getAccounts()[email]||{}) : {};
-  const rec=getRecord(id);
-  $('#applicationCompany').textContent=applicationAgency.name;
-  $('#applicationTitle').textContent=`Apply for ${applicationAgency.name}.`;
-  $('#applicationSubtitle').textContent=email ? `You're signed in as ${email}. Your application will be added to your tracker.` : 'Submit your application through VA Connect and keep the progress in one place.';
-  $('#applicationName').value=account.name||'';
-  $('#applicationEmail').value=email||'';
-  $('#applicationPhone').value=rec.application?.phone||'';
-  $('#applicationRole').value=rec.application?.role||((applicationAgency.roles||'').split(',')[0]||'Virtual Assistant');
-  $('#applicationResume').value=rec.application?.resume||'';
-  $('#applicationAvailability').value=rec.application?.availability||'Immediately';
-  $('#applicationMessage').value=rec.application?.message||'';
-  $('#applicationConsent').checked=false;
-  $('#applicationMessage').textContent='';
-  $('#applicationMessage').className='application-message';
-  $('#applicationVisitBtn').onclick=()=>window.open(applicationAgency.url,'_blank','noopener,noreferrer');
-  $('#applicationModal').classList.add('open'); $('#applicationModal').setAttribute('aria-hidden','false'); document.body.classList.add('modal-open');
-}
-function closeApplication(){ $('#applicationModal').classList.remove('open'); $('#applicationModal').setAttribute('aria-hidden','true'); document.body.classList.remove('modal-open'); applicationAgency=null; }
-$('#applicationClose').addEventListener('click',closeApplication); $$('[data-close-application]').forEach(x=>x.addEventListener('click',closeApplication));
-$('#modalApplyBtn').addEventListener('click',()=>{ if(activeAgency){ const id=activeAgency.id; closeModal(); setTimeout(()=>openExternalSite(id,'apply'),80); }});
-$('#applicationForm').addEventListener('submit',e=>{
-  e.preventDefault(); if(!applicationAgency)return;
-  const rec=getRecord(applicationAgency.id);
-  rec.status='Applied';
-  rec.application={name:$('#applicationName').value.trim(),email:$('#applicationEmail').value.trim(),phone:$('#applicationPhone').value.trim(),role:$('#applicationRole').value.trim(),resume:$('#applicationResume').value.trim(),availability:$('#applicationAvailability').value,message:$('#applicationMessage').value.trim(),submittedAt:new Date().toISOString()};
-  rec.note=rec.note||`Application submitted via VA Connect on ${new Date().toLocaleDateString()}.`;
-  saveState(); render(); updateStats();
-  $('#applicationMessage').textContent='Application submitted and saved to your VA Connect tracker.';
-  $('#applicationMessage').className='application-message success';
-  setTimeout(closeApplication,900);
-});
+// Applications are submitted on the agency's official site; VA Connect records the tracker status locally.
 
 // Lightweight local account feature. The tracker remains device-local and is namespaced per signed-in email.
 async function hashPassword(value){

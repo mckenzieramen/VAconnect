@@ -24,3 +24,9 @@ This build preserves the approved VA CONNECT v3 visual direction and fixes the r
 
 ### v5 application workflow
 Users can submit an in-site application form for each opportunity. The submission is stored with the opportunity tracker in the current browser/account namespace and automatically moves the opportunity to Applied. The official agency link remains available through Visit Official Site.
+
+
+## v7 changes
+- Preview is represented by the visual cover card and opens the VA Connect details view; no embedded external-site iframe is used.
+- Apply Now opens the agency's official website in a new tab and records Applied in the tracker.
+- Preserves search, filters, accounts, notes, and status tracking.
