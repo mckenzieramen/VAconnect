@@ -62,6 +62,7 @@ function getRecord(id){
   return state[id];
 }
 function saveState(){
+  const stateKey=currentUserEmail?`vaConnectTracker:${currentUserEmail}`:guestStateKey;
   localStorage.setItem(stateKey,JSON.stringify(state));
   updateStats();
   renderTracker();
@@ -92,7 +93,7 @@ function trackerRow(a){
   const statusClass=r.status.toLowerCase().replace(/\s+/g,'-');
   return `<article class="tracker-row" data-track-id="${a.id}">
     <div class="tracker-company"><span class="tracker-logo">${escapeHtml(initials(a.name))}</span><div><strong>${escapeHtml(a.name)}</strong><small>${escapeHtml(regionPrimary(a))} · ${escapeHtml(roleLabel(a))}</small></div></div>
-    <div class="tracker-stage"><span class="tracker-stage-dot ${statusClass}"></span><span>${escapeHtml(r.status)}</span></div>
+    <div class="tracker-stage"><span class="tracker-stage-dot ${statusClass}"></span><select class="tracker-stage-select" data-track-status="${a.id}" aria-label="Update ${escapeHtml(a.name)} status">${statuses.map(s=>`<option${r.status===s?' selected':''}>${s}</option>`).join('')}</select></div>
     <div class="tracker-note">${r.note?escapeHtml(r.note):'No personal note added'}</div>
     <div class="tracker-actions"><button type="button" class="tracker-open" data-track-open="${a.id}">View</button><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-track-apply="${a.id}">Apply ↗</a></div>
   </article>`;
@@ -116,6 +117,7 @@ function renderTracker(){
   if(empty)empty.hidden=list.length!==0;
   $$('.tracker-stat').forEach(btn=>btn.classList.toggle('active',(btn.dataset.trackFilter||'all')===trackerFilter));
   $$('#trackerList [data-track-open]').forEach(btn=>btn.addEventListener('click',()=>openPreview(Number(btn.dataset.trackOpen))));
+  $$('#trackerList [data-track-status]').forEach(select=>select.addEventListener('change',()=>{getRecord(Number(select.dataset.trackStatus)).status=select.value;saveState();}));
 }
 function hostname(url){try{return new URL(url).hostname.replace(/^www\./,'www.')}catch{return 'official website'}}
 function regionPrimary(a){return (a.region||'Global').split('/')[0].trim()}
@@ -170,6 +172,7 @@ function cardMarkup(a,index){
       <div class="card-actions">
         <button class="card-btn" data-preview="${a.id}" aria-label="Preview ${escapeHtml(a.name)}">◉ &nbsp;Preview</button>
         <a class="card-btn primary" href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-apply="${a.id}">Visit / Apply ↗</a>
+        <select class="card-status" data-status="${a.id}" aria-label="Update ${escapeHtml(a.name)} application status">${statuses.map(s=>`<option${r.status===s?' selected':''}>${s}</option>`).join('')}</select>
       </div>
     </div>
   </article>`;

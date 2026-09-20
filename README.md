@@ -67,3 +67,11 @@ It will never silently use an old asset, a third-party logo service, a generated
 A Firebase/Cloud Functions backend scaffold is included under `functions/`. It uses a scheduled function at `0 8 * * *` with timezone `Asia/Manila` and Resend for email delivery. This is intentionally not presented as live until the VA CONNECT Firebase project and Resend sender/API secret are connected. The static Cloudflare Pages frontend alone cannot securely send scheduled emails to users or persist their tracker across devices.
 
 Firebase Authentication can provide verified email/password or passwordless email-link sign-in; the current V17 frontend keeps a lightweight email-profile fallback so the UI remains usable before backend credentials are connected.
+
+### V18 — Card Status + In-Site Tracker Login
+- Added a visible status dropdown directly to every opportunity card: Not Started, Saved, Applied, Interview, Offer, Rejected, Not Eligible.
+- Status changes on cards persist to the same tracker state used by the Track Applications page.
+- Added the same editable status dropdown to tracked application rows.
+- Fixed the tracker persistence key used by `saveState()` so status/favorite/note updates are stored under the signed-in email key (or guest key).
+- Kept Sign In inside the VA CONNECT website UI; no external login page is used.
+- Firebase Authentication can be connected later for secure cross-device accounts. The current email-based profile is a client-side tracker identity, not a production authentication service.
