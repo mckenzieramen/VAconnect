@@ -83,9 +83,10 @@ function cardMarkup(a,index){
   const colors=['','','purple','magenta','green','purple','magenta'];
   const badgeClass=colors[index%colors.length];
   return `<article class="agency-card" data-id="${a.id}">
-    <div class="card-browser"><span class="browser-dots">● ● ●</span><span class="domain">www.${escapeHtml(hostname(a.url).replace(/^www\./,''))}</span></div>
-    <span class="number-badge ${badgeClass}">#${String(index+1).padStart(2,'0')}</span>
-    <button class="favorite ${r.favorite?'active':''}" data-favorite="${a.id}" aria-label="${r.favorite?'Remove from favorites':'Add to favorites'}">${r.favorite?'♥':'♡'}</button>
+    <div class="card-browser">
+      <div class="browser-left"><span class="browser-dots">● ● ●</span><span class="number-badge ${badgeClass}">#${String(index+1).padStart(3,'0')}</span><span class="domain"><span class="domain-icon">◉</span>www.${escapeHtml(hostname(a.url).replace(/^www\./,''))}</span></div>
+      <button class="favorite ${r.favorite?'active':''}" data-favorite="${a.id}" aria-label="${r.favorite?'Remove from favorites':'Add to favorites'}">${r.favorite?'♥':'♡'}</button>
+    </div>
     ${cardBanner(a)}
     <div class="card-body">
       <div class="company-row">
