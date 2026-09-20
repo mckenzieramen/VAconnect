@@ -6,14 +6,15 @@ const stateKey='vaConnectReferenceV11';
 const state=JSON.parse(localStorage.getItem(stateKey)||'{}');
 let activeAgency=null, frameTimer=null;
 
-const logoMap={
-  1:'assets/Ataraxis-Main.png',
-  2:'assets/wing-logo.png',
-  3:'assets/Athena.svg',
-  5:'assets/MyOutDesk.png',
-  6:'assets/Zirtual_Logo.webp',
-  9:'assets/wishup.webp'
-};
+const logoMap={};
+
+// Official-logo policy:
+// Local agency logo assets from earlier versions were intentionally removed.
+// A logo may only be added here after it has been verified/downloaded from the
+// agency's own official website or official brand-assets page.
+// Format: id:'assets/logos/AgencyName_logo.ext'
+// Do NOT use third-party logo services, generated logos, favicons, or old assets.
+
 const bannerMap={
   1:{theme:'',headline:'Do Work\\nThat Matters',sub:'Meaningful opportunities. A brighter tomorrow.'},
   2:{theme:'',headline:'Flexible Work\\nfor a Brighter Tomorrow',sub:'Find remote opportunities that fit your life.'},
@@ -64,14 +65,13 @@ function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;',
 
 function cardBanner(a){
   const b=bannerMap[a.id]||{};
-  if(a.id<=6) return `<div class="card-banner image-banner"><img src="assets/banner-${a.id}.png" alt="${escapeHtml(a.name)} opportunity banner"></div>`;
   const logo=logoFor(a);
   const theme=b.theme||(['purple','dark','green'][a.id%3]||'');
   const headline=b.headline||`${a.name}\\nRemote Opportunities`;
   const sub=b.sub||`Explore ${roleLabel(a)} opportunities.`;
   return `<div class="card-banner ${theme}">
     <div class="banner-copy">
-      ${logo?`<img class="banner-logo" src="${logo}" alt="${escapeHtml(a.name)} logo">`:`<div class="banner-logo" style="display:flex;align-items:center;color:#0b3455;font:800 22px Space Grotesk">${escapeHtml(a.name)}</div>`}
+      ${logo?`<img class="banner-logo" src="${logo}" alt="${escapeHtml(a.name)} official logo">`:`<div class="banner-logo official-logo-slot" aria-label="Official logo pending verification">${escapeHtml(a.name)}</div>`}
       <div class="banner-headline">${escapeHtml(headline).replace(/\\n/g,'<br>')}</div>
       <div class="banner-sub">${escapeHtml(sub)}</div>
     </div>
@@ -159,62 +159,6 @@ function openPreview(id){
   $('#agencyModal').classList.add('open');$('#agencyModal').setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
 }
 function closePreview(){clearTimeout(frameTimer);$('#websiteFrame').src='about:blank';$('#agencyModal').classList.remove('open');$('#agencyModal').setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');activeAgency=null}
-
-
-// Primary navigation feature: keep the active pill synchronized with the current section.
-// Clicking a navigation item updates it immediately; scrolling updates it when a section becomes visible.
-function initPrimaryNavigation(){
-  const nav=$('#nav');
-  if(!nav)return;
-  const links=[...nav.querySelectorAll('a[href^="#"]')];
-  const sections=links.map(link=>document.querySelector(link.getAttribute('href'))).filter(Boolean);
-  const setActive=(id,replaceHash=false)=>{
-    links.forEach(link=>{
-      const isActive=link.getAttribute('href')===`#${id}`;
-      link.classList.toggle('active',isActive);
-      if(isActive) link.setAttribute('aria-current','page');
-      else link.removeAttribute('aria-current');
-    });
-    if(replaceHash && history.replaceState) history.replaceState(null,'',`#${id}`);
-  };
-
-  links.forEach(link=>link.addEventListener('click',event=>{
-    const targetId=link.getAttribute('href').slice(1);
-    const target=document.getElementById(targetId);
-    if(!target)return;
-    event.preventDefault();
-    setActive(targetId,true);
-    const headerOffset=(document.querySelector('#header')?.offsetHeight||76)+10;
-    const y=Math.max(0,target.getBoundingClientRect().top+window.scrollY-headerOffset);
-    window.scrollTo({top:y,behavior:'smooth'});
-    nav.classList.remove('mobile-open');
-    const menu=$('#menuBtn'); if(menu)menu.textContent='☰';
-  }));
-
-  const hash=window.location.hash.slice(1);
-  setActive(hash && document.getElementById(hash) ? hash : 'directory');
-
-  if('IntersectionObserver' in window){
-    const observer=new IntersectionObserver(entries=>{
-      const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-      if(visible) setActive(visible.target.id);
-    },{rootMargin:'-35% 0px -55% 0px',threshold:[0,.15,.35,.6]});
-    sections.forEach(section=>observer.observe(section));
-  }else{
-    const onScroll=()=>{
-      const headerOffset=(document.querySelector('#header')?.offsetHeight||76)+20;
-      let current='directory';
-      sections.forEach(section=>{if(section.getBoundingClientRect().top<=headerOffset+30)current=section.id;});
-      setActive(current);
-    };
-    window.addEventListener('scroll',onScroll,{passive:true});
-  }
-
-  window.addEventListener('hashchange',()=>{
-    const id=window.location.hash.slice(1);
-    if(document.getElementById(id))setActive(id);
-  });
-}
 function populateFilters(){
   const regions=new Set(), roles=new Set();
   (window.VA_AGENCIES||[]).forEach(a=>{
@@ -234,7 +178,7 @@ window.addEventListener('scroll',()=>{
 $('#menuBtn').addEventListener('click',()=>{
   const nav=$('#nav');const open=nav.classList.toggle('mobile-open');$('#menuBtn').textContent=open?'×':'☰';
 });
-initPrimaryNavigation();
+$$('#nav a').forEach(a=>a.addEventListener('click',()=>{$('#nav').classList.remove('mobile-open');$('#menuBtn').textContent='☰'}));
 $('#headerSearchBtn').addEventListener('click',()=>{document.querySelector('#directory').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#searchInput').focus(),450)});
 $('#signInBtn').addEventListener('click',()=>$('#authModal').classList.add('open'));
 $('#createAccountBtn').addEventListener('click',()=>$('#authModal').classList.add('open'));

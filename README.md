@@ -23,3 +23,16 @@ This build uses the supplied VA CONNECT visual reference as the desktop source o
 - Local asset reference check: PASS
 - 118 opportunity records detected: PASS
 - ZIP integrity: checked after packaging
+
+
+OFFICIAL LOGO REPLACEMENT — 2026-09-20
+---------------------------------------
+All previously bundled agency logo assets and the six old image banners containing embedded agency branding were removed.
+No replacement logo was fabricated.
+
+The file `official-logo-sources.json` contains the 118 agency records and their official websites.
+Only verified logo files downloaded from those official sites/official brand-asset pages should be placed in:
+`assets/logos/AgencyName_logo.ext`
+
+The application will use a verified local logo only when it is explicitly mapped in `logoMap`.
+It will never silently use an old asset, a third-party logo service, a generated logo, or a favicon as an agency logo.
