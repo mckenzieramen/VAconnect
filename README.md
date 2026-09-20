@@ -1,27 +1,39 @@
-# VA CONNECT — Interactive Directory v2
+# VA CONNECT — v4
 
-**Brand:** VA CONNECT  
-**Tagline:** Connect. Delegate. Elevate.
+## Safe Edit Update
 
-## What changed
-- Rebranded the site completely from VA 100 to VA CONNECT.
-- Added the VA CONNECT logo and favicon.
-- Imported the **Global VA Agencies** spreadsheet into the website as a local directory dataset.
-- Added a visual agency-card directory for all 118 entries.
-- Added search by agency, role, region, scope, and eligibility text.
-- Added filters for applicant scope, region, and application status.
-- Added **Preview** modal with a live website iframe when the external site allows embedding.
-- Added **Visit / Apply** buttons that open the source website in a new tab.
-- Added application tracking statuses: Not Started, Saved, Applied, Interview, Offer, Rejected, Not Eligible.
-- Added personal notes per opportunity.
-- Progress is saved in browser localStorage so refreshing the page keeps the user's tracking data on that device/browser.
-- Added dashboard counters for Applied, Interview, and Offer.
-- Added mobile-responsive navigation and directory layout.
+This build preserves the approved VA CONNECT v3 visual direction and fixes the root cause of the blank/non-navigable page: the JavaScript/data files were not loaded by `index.html`.
 
-## Data source
-The directory was imported from `Global VA Agencies.xlsx`, sheet `Global VA Directory`. Hyperlinks stored in the spreadsheet were preserved as the official website/career links.
+### Preserved
+- VA CONNECT branding and logo
+- Cover-first opportunity cards
+- 118-opportunity directory
+- Search and filters
+- Visit / Apply links
+- Details modal
+- Application status tracking
+- Notes
+- Local account sign-in/register UI
+- Responsive navigation and mobile layout
 
-## Important
-External websites can block iframe previews with security headers. When that happens, the card's **Visit / Apply** button still opens the official website directly.
+### Fixed
+- `agencies.js` is now loaded before the application script.
+- `script.js` is now loaded at the end of the document so all DOM elements exist before initialization.
+- Existing functionality is preserved; no unrelated redesign or data changes were made.
 
-Application tracking is currently browser-local. A future Firebase/Firestore version can make the same tracking available across devices and accounts.
+
+### v5 application workflow
+Users can submit an in-site application form for each opportunity. The submission is stored with the opportunity tracker in the current browser/account namespace and automatically moves the opportunity to Applied. The official agency link remains available through Visit Official Site.
+
+
+## v7 changes
+- Preview is represented by the visual cover card and opens the VA Connect details view; no embedded external-site iframe is used.
+- Apply Now opens the agency's official website in a new tab and records Applied in the tracker.
+- Preserves search, filters, accounts, notes, and status tracking.
+
+
+## v8 update
+- The V1-style website preview is now rendered directly inside each opportunity card cover as a browser/site mockup.
+- Removed the separate Preview action from card controls; the cover itself is the preview/details trigger.
+- Apply Now still opens the official agency site in a new tab and records Applied.
+- Existing search, filters, accounts, notes, and status tracking are preserved.

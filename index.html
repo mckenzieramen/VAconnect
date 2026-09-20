@@ -16,8 +16,8 @@
 <div class="progress" id="progress"></div>
 <header class="site-header" id="header">
   <a class="brand" href="#home" aria-label="VA Connect home"><img src="va-connect-logo.png" alt="VA Connect logo"><span>VA <b>CONNECT</b></span></a>
-  <nav id="nav"><a class="active" href="#home">Home</a><a href="#directory">VA Directory</a><a href="#how">How It Works</a><a href="#about">About</a></nav>
-  <a class="header-cta" href="#directory">Explore Opportunities <span>↗</span></a>
+  <nav id="nav"><a class="active" href="#home">Home</a><a href="#directory">Opportunities</a><a href="#how">How It Works</a><a href="#about">About</a></nav>
+  <div class="header-actions"><a class="header-cta" href="#directory">Explore Opportunities <span>↗</span></a><button class="login-btn" id="loginBtn" type="button">Sign In</button><button class="account-chip" id="accountChip" type="button" hidden><span class="account-avatar" id="accountAvatar">VC</span><span id="accountLabel">Account</span><b>⌄</b></button></div>
   <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
 </header>
 
@@ -93,15 +93,81 @@
 
 <div class="modal" id="agencyModal" aria-hidden="true">
   <div class="modal-backdrop" data-close-modal></div>
-  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-panel details-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <button class="modal-close" id="modalClose" aria-label="Close">×</button>
-    <div class="modal-top"><div class="modal-brand"><div class="modal-favicon" id="modalFavicon">VA</div><div><span class="eyebrow">OPPORTUNITY</span><h2 id="modalTitle">Agency</h2></div></div><span class="status-badge" id="modalStatus">NOT STARTED</span></div>
-    <div class="website-preview"><div class="preview-browser"><span>● ● ●</span><small id="modalUrl">website</small></div><iframe id="websiteFrame" title="Website preview" loading="lazy"></iframe><div class="frame-fallback"><strong>Website preview may be blocked.</strong><span>Use the button below to open the official site directly.</span></div></div>
+    <div class="modal-top"><div class="modal-brand"><div class="modal-favicon" id="modalFavicon">VA</div><div><span class="eyebrow">OPPORTUNITY DETAILS</span><h2 id="modalTitle">Agency</h2></div></div><span class="status-badge" id="modalStatus">NOT STARTED</span></div>
+    <div class="detail-cover" id="modalCover"></div>
     <div class="modal-details"><div><span>REACH</span><strong id="modalRegion"></strong></div><div><span>ROLES</span><strong id="modalRoles"></strong></div><div><span>ELIGIBILITY</span><strong id="modalEligibility"></strong></div></div>
-    <div class="modal-actions"><a class="btn primary" id="visitBtn" target="_blank" rel="noopener noreferrer">Visit / Apply ↗</a><select id="modalStatusSelect"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select></div>
-    <label class="notes-label">PERSONAL NOTE<textarea id="modalNote" placeholder="Add a reminder, interview date, follow-up, salary note, or anything you want to remember..."></textarea></label>
+    <div class="modal-actions"><button class="btn primary apply-now-btn" id="modalApplyBtn" type="button">Apply on Official Site <span>→</span></button><a class="btn ghost" id="visitBtn" target="_blank" rel="noopener noreferrer">Visit Official Site ↗</a><select id="modalStatusSelect"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select></div>
+    <label class="notes-label">PERSONAL NOTE<textarea id="modalNote" placeholder="Add a reminder, interview date, follow-up, salary note, or other detail..."></textarea></label>
   </div>
 </div>
+
+<div class="modal external-site-modal" id="externalSiteModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-external></div>
+  <div class="external-site-panel" role="dialog" aria-modal="true" aria-labelledby="externalSiteTitle">
+    <div class="external-site-head">
+      <div class="external-site-brand"><div class="modal-favicon" id="externalSiteFavicon">VA</div><div><span class="eyebrow" id="externalSiteEyebrow">OPPORTUNITY PREVIEW</span><h2 id="externalSiteTitle">Agency</h2><p id="externalSiteSubtitle">Official website</p></div></div>
+      <div class="external-site-head-actions"><select id="externalSiteStatus" aria-label="Application status"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select><button class="modal-close" id="externalSiteClose" aria-label="Close">×</button></div>
+    </div>
+    <div class="external-site-toolbar">
+      <span id="externalSiteUrl">Loading official website…</span>
+      <div><button class="btn ghost" id="externalOpenNew" type="button">Open in New Tab ↗</button><button class="btn primary" id="externalMarkApplied" type="button">Mark Applied ✓</button></div>
+    </div>
+    <div class="external-site-frame-wrap"><div class="external-site-loading" id="externalSiteLoading"><span class="loader-dot"></span>Loading the official website…</div><iframe id="externalSiteFrame" title="Official agency website" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <div class="external-site-fallback"><strong>Application page not showing?</strong><span>Some companies prevent their websites from being embedded. Use “Open in New Tab” to continue directly on the official site.</span></div>
+  </div>
+</div>
+
+<div class="modal application-modal" id="applicationModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-application></div>
+  <div class="application-panel" role="dialog" aria-modal="true" aria-labelledby="applicationTitle">
+    <button class="modal-close" id="applicationClose" aria-label="Close">×</button>
+    <div class="application-head">
+      <div><span class="eyebrow">VA CONNECT APPLICATION</span><h2 id="applicationTitle">Apply for this opportunity.</h2><p id="applicationSubtitle">Your application will be saved to your VA Connect tracker.</p></div>
+      <span class="application-company" id="applicationCompany">Agency</span>
+    </div>
+    <form id="applicationForm" class="application-form">
+      <div class="application-grid">
+        <label>Full name<input id="applicationName" type="text" autocomplete="name" required placeholder="Your full name"></label>
+        <label>Email<input id="applicationEmail" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+        <label>Phone / WhatsApp<input id="applicationPhone" type="tel" autocomplete="tel" placeholder="+63 ..."></label>
+        <label>Role applying for<input id="applicationRole" type="text" required placeholder="e.g. Virtual Assistant"></label>
+      </div>
+      <label>Resume / portfolio link<input id="applicationResume" type="url" placeholder="https://..." required></label>
+      <label>Availability<select id="applicationAvailability"><option>Immediately</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Within 1 month</option><option>Currently employed</option></select></label>
+      <label>Cover message<textarea id="applicationMessage" rows="5" required placeholder="Introduce yourself and briefly explain why you're a good fit..."></textarea></label>
+      <label class="application-consent"><input id="applicationConsent" type="checkbox" required><span>I confirm that the information above is accurate and I understand that VA Connect records my application; final hiring decisions are made by the agency.</span></label>
+      <div class="application-actions"><button type="button" class="btn ghost" id="applicationVisitBtn">Open Official Site ↗</button><button type="submit" class="btn primary">Submit Application <span>→</span></button></div>
+      <p class="application-message" id="applicationMessage" role="status"></p>
+    </form>
+  </div>
+</div>
+
+<div class="modal auth-modal" id="authModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-auth></div>
+  <div class="auth-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <button class="modal-close" id="authClose" aria-label="Close">×</button>
+    <div class="auth-brand"><img src="va-connect-logo.png" alt="VA Connect"><div><span class="eyebrow">VA CONNECT ACCOUNT</span><h2 id="authTitle">Welcome back.</h2><p>Sign in to keep your application tracker tied to your account on this device.</p></div></div>
+    <div class="auth-tabs"><button class="auth-tab active" data-auth-tab="login" type="button">Sign In</button><button class="auth-tab" data-auth-tab="register" type="button">Create Account</button></div>
+    <form id="loginForm" class="auth-form">
+      <label>Email<input id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+      <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••"></label>
+      <button class="btn primary auth-submit" type="submit">Sign In <span>→</span></button>
+      <p class="auth-message" id="loginMessage" role="status"></p>
+    </form>
+    <form id="registerForm" class="auth-form" hidden>
+      <label>Full name<input id="registerName" type="text" autocomplete="name" required placeholder="Your name"></label>
+      <label>Email<input id="registerEmail" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+      <label>Password<input id="registerPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="At least 6 characters"></label>
+      <button class="btn primary auth-submit" type="submit">Create Account <span>→</span></button>
+      <p class="auth-message" id="registerMessage" role="status"></p>
+    </form>
+    <div class="auth-note"><span>✓</span> Your tracker is saved locally on this device. This account screen is a lightweight website login, not a server-side identity system.</div>
+  </div>
+</div>
+
+<div class="account-menu" id="accountMenu" hidden><div class="account-menu-head"><span class="account-avatar large" id="menuAvatar">VC</span><div><strong id="menuName">VA Connect User</strong><small id="menuEmail">user@example.com</small></div></div><button id="logoutBtn" type="button">Log out</button></div>
 <script src="agencies.js"></script>
 <script src="script.js"></script>
 </body>
