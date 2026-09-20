@@ -75,3 +75,13 @@ Firebase Authentication can provide verified email/password or passwordless emai
 - Fixed the tracker persistence key used by `saveState()` so status/favorite/note updates are stored under the signed-in email key (or guest key).
 - Kept Sign In inside the VA CONNECT website UI; no external login page is used.
 - Firebase Authentication can be connected later for secure cross-device accounts. The current email-based profile is a client-side tracker identity, not a production authentication service.
+
+## V19 Card Action Layout
+- Opportunity cards now use a clean two-row action layout: Preview + status dropdown on the first row, with a full-width rectangular Visit / Apply CTA underneath.
+- Status remains directly editable on each card and continues to persist into Track Applications.
+
+
+## V20 Logo Update
+- Agency cards and Track Applications no longer display letter initials as the primary logo treatment.
+- They attempt the agency's own official-domain `/favicon.ico`, then `/apple-touch-icon.png`, based on the agency URL.
+- Existing local-logo policy remains: no third-party logo services and no legacy project logo assets.

@@ -92,7 +92,7 @@ function trackerRow(a){
   const r=getRecord(a.id);
   const statusClass=r.status.toLowerCase().replace(/\s+/g,'-');
   return `<article class="tracker-row" data-track-id="${a.id}">
-    <div class="tracker-company"><span class="tracker-logo">${escapeHtml(initials(a.name))}</span><div><strong>${escapeHtml(a.name)}</strong><small>${escapeHtml(regionPrimary(a))} · ${escapeHtml(roleLabel(a))}</small></div></div>
+    <div class="tracker-company">${logoMarkup(a,'tracker-logo')}<div><strong>${escapeHtml(a.name)}</strong><small>${escapeHtml(regionPrimary(a))} · ${escapeHtml(roleLabel(a))}</small></div></div>
     <div class="tracker-stage"><span class="tracker-stage-dot ${statusClass}"></span><select class="tracker-stage-select" data-track-status="${a.id}" aria-label="Update ${escapeHtml(a.name)} status">${statuses.map(s=>`<option${r.status===s?' selected':''}>${s}</option>`).join('')}</select></div>
     <div class="tracker-note">${r.note?escapeHtml(r.note):'No personal note added'}</div>
     <div class="tracker-actions"><button type="button" class="tracker-open" data-track-open="${a.id}">View</button><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-track-apply="${a.id}">Apply ↗</a></div>
@@ -130,6 +130,8 @@ function tagsFor(a){
 }
 function roleLabel(a){return (a.roles||'Virtual Assistant').replace(/\s+/g,' ').trim()}
 function logoFor(a){return logoMap[a.id]||null}
+function officialLogoOrigin(a){try{const u=new URL(a.url); return u.origin}catch(e){return ''}}
+function logoMarkup(a,cls='mini-logo'){const local=logoFor(a); const origin=officialLogoOrigin(a); if(local) return `<span class="${cls}"><img src="${local}" alt="${escapeHtml(a.name)} official logo"></span>`; if(origin) return `<span class="${cls}"><img src="${origin}/favicon.ico" alt="${escapeHtml(a.name)} official logo" loading="lazy" onerror="this.onerror=function(){this.onerror=null;this.src='${origin}/apple-touch-icon.png'};this.src='${origin}/apple-touch-icon.png'"></span>`; return `<span class="${cls} logo-fallback" aria-hidden="true">⌂</span>`}
 function initials(name){return name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
@@ -162,7 +164,7 @@ function cardMarkup(a,index){
     <div class="card-body">
       <div class="company-row">
         <div class="company-name">
-          <span class="mini-logo">${logo?`<img src="${logo}" alt="${escapeHtml(a.name)} official logo">`:escapeHtml(initials(a.name))}</span>
+          ${logoMarkup(a,'mini-logo')}
           <strong>${escapeHtml(a.name)}</strong><span class="verified" aria-label="Verified directory entry">✓</span>
         </div>
         <button class="favorite ${r.favorite?'active':''}" data-favorite="${a.id}" aria-label="${r.favorite?'Remove from favorites':'Add to favorites'}">${r.favorite?'★':'☆'}</button>
@@ -212,7 +214,7 @@ function openPreview(id){
   activeAgency=(window.VA_AGENCIES||[]).find(a=>a.id===id); if(!activeAgency)return;
   const r=getRecord(id), logo=logoFor(activeAgency);
   $('#modalTitle').textContent=activeAgency.name;
-  $('#modalFavicon').innerHTML=logo?`<img src="${logo}" alt="" style="width:100%;height:100%;object-fit:contain;background:#fff;border-radius:11px;padding:4px">`:escapeHtml(initials(activeAgency.name));
+  $('#modalFavicon').innerHTML=logo?`<img src="${logo}" alt="" style="width:100%;height:100%;object-fit:contain;background:#fff;border-radius:11px;padding:4px">`:`<img src="${officialLogoOrigin(activeAgency)}/favicon.ico" alt="${escapeHtml(activeAgency.name)} official logo" style="width:100%;height:100%;object-fit:contain;background:#fff;border-radius:11px;padding:4px" onerror="this.src='${officialLogoOrigin(activeAgency)}/apple-touch-icon.png'">`;
   $('#modalStatus').textContent=r.status.toUpperCase();
   $('#modalUrl').textContent=hostname(activeAgency.url);
   $('#modalRegion').textContent=activeAgency.region||'Global';

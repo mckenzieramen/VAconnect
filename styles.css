@@ -253,11 +253,15 @@ footer{max-width:var(--max);margin:auto;padding:28px 22px;display:flex;align-ite
 .tag{padding:5px 10px}
 .card-actions{
   margin-top:auto;
-  grid-template-columns:1fr 1.38fr;
+  display:grid;
+  grid-template-columns:1fr 1fr;
   gap:9px;
 }
-.card-btn{height:44px;border-radius:9px}
-.card-btn.primary{font-size:11px}
+.card-btn,.card-status{height:44px;border-radius:9px}
+.card-btn{width:100%;}
+.card-btn.primary{font-size:11px;grid-column:1 / -1;border-radius:9px;min-height:46px}
+.card-status{width:100%;appearance:auto!important;padding:0 10px!important;background:#061a2d!important;color:#eef8ff!important;border:1px solid rgba(63,143,202,.7)!important}
+.card-status:focus{border-color:var(--cyan)!important;box-shadow:0 0 0 1px rgba(0,217,255,.18),0 0 16px rgba(0,217,255,.1)}
 @media (max-width:1050px){
   .site-header nav{gap:3px}
   .site-header nav a{padding:12px 9px}
@@ -338,4 +342,7 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
 .tracker-stage-select{height:36px;min-width:118px;padding:0 9px;border-radius:9px;border:1px solid rgba(63,143,202,.55);background:#061a2d;color:#eef8ff;font-size:10px;font-weight:700;outline:none;cursor:pointer}
 .tracker-stage-select:focus{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(0,217,255,.16)}
 @media (max-width:900px){.tracker-stage{min-width:130px}.tracker-stage-select{min-width:105px}}
-@media (max-width:620px){.tracker-stage{width:100%;justify-content:flex-start}.tracker-stage-select{flex:1}.card-actions{grid-template-columns:1fr 1.3fr}.card-status{grid-column:1/-1}}
+@media (max-width:620px){.tracker-stage{width:100%;justify-content:flex-start}.tracker-stage-select{flex:1}.card-actions{grid-template-columns:1fr 1fr}.card-btn.primary{grid-column:1/-1}.card-status{grid-column:auto}}
+
+/* V20 official-domain logo presentation: no initials on cards or tracker. */
+.mini-logo,.tracker-logo{background:#f7fbff;overflow:hidden;display:grid;place-items:center;flex:0 0 auto}.mini-logo img,.tracker-logo img{width:100%;height:100%;object-fit:contain;padding:5px;background:#fff}.mini-logo{border:1px solid rgba(45,181,226,.28)}.tracker-logo{border:1px solid rgba(45,181,226,.32);border-radius:11px}.logo-fallback{color:#6e8ca2;font-size:16px}
