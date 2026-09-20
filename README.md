@@ -1,27 +1,40 @@
-# VA CONNECT — Interactive Directory v2
+# VA CONNECT — Interactive Opportunity Directory v3
 
-**Brand:** VA CONNECT  
-**Tagline:** Connect. Delegate. Elevate.
+## Branding
+- VA CONNECT
+- Connect. Delegate. Elevate.
+- VA CONNECT logo included as `va-connect-logo.png`
 
-## What changed
-- Rebranded the site completely from VA 100 to VA CONNECT.
-- Added the VA CONNECT logo and favicon.
-- Imported the **Global VA Agencies** spreadsheet into the website as a local directory dataset.
-- Added a visual agency-card directory for all 118 entries.
-- Added search by agency, role, region, scope, and eligibility text.
-- Added filters for applicant scope, region, and application status.
-- Added **Preview** modal with a live website iframe when the external site allows embedding.
-- Added **Visit / Apply** buttons that open the source website in a new tab.
-- Added application tracking statuses: Not Started, Saved, Applied, Interview, Offer, Rejected, Not Eligible.
-- Added personal notes per opportunity.
-- Progress is saved in browser localStorage so refreshing the page keeps the user's tracking data on that device/browser.
-- Added dashboard counters for Applied, Interview, and Offer.
-- Added mobile-responsive navigation and directory layout.
+## Directory
+- Imports all 118 entries from the supplied Global VA Agencies workbook.
+- Search by agency, role, region, scope, or eligibility text.
+- Filter by applicant scope, region, and application status.
+- Each opportunity uses a cover-first visual card inspired by the approved VA CONNECT design direction.
+- The **Visit / Apply** button opens the listed official website/careers URL in a new tab.
+- The **Details** action opens a focused details panel with eligibility, reach, roles, notes, and tracking controls.
 
-## Data source
-The directory was imported from `Global VA Agencies.xlsx`, sheet `Global VA Directory`. Hyperlinks stored in the spreadsheet were preserved as the official website/career links.
+## Application tracking
+Statuses:
+- Not Started
+- Saved
+- Applied
+- Interview
+- Offer
+- Rejected
+- Not Eligible
 
-## Important
-External websites can block iframe previews with security headers. When that happens, the card's **Visit / Apply** button still opens the official website directly.
+Notes and status changes are persisted in browser storage. Signed-in users get a separate local tracker namespace per email.
 
-Application tracking is currently browser-local. A future Firebase/Firestore version can make the same tracking available across devices and accounts.
+## Account feature
+- Sign In and Create Account UI included.
+- Email/password is hashed with Web Crypto before local storage.
+- Session is kept locally on the device.
+- This is intentionally a lightweight client-side account feature, not server-side authentication. For production authentication across devices, connect the same UI to Firebase Authentication or another backend later.
+
+## Deployment
+Static HTML/CSS/JS. Cloudflare Pages settings:
+- Project: `roadvaconnect`
+- Branch: `main`
+- Framework: None
+- Build command: blank
+- Output directory: `/`
