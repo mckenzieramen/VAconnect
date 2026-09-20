@@ -92,3 +92,9 @@ Firebase Authentication can provide verified email/password or passwordless emai
 - Logos render inside the promotional card cover to avoid broken inline logo images.
 - Agencies without a supplied/mapped logo keep the existing text fallback.
 - No remote logo URLs are required for the card cover.
+
+
+## V23 Card Action Layout
+- Preview and application-status dropdown now sit side-by-side on the same row.
+- Visit / Apply is a full-width rectangular action below them.
+- Existing status persistence, tracker routing, and 118 opportunities are preserved.

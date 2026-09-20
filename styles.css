@@ -370,3 +370,34 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
   .cover-logo-mark.has-image{width:64px;height:48px;flex-basis:64px}
   .cover-logo-name{max-width:calc(100% - 76px)}
 }
+
+
+/* V23 — Card actions: Preview + status dropdown side-by-side; Visit / Apply full width below. */
+.card-actions{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+  gap:8px !important;
+  padding-top:2px !important;
+}
+.card-actions .card-btn,
+.card-actions .card-status{
+  width:100% !important;
+  min-width:0 !important;
+  height:44px !important;
+  box-sizing:border-box !important;
+}
+.card-actions .card-btn.primary{
+  grid-column:1 / -1 !important;
+}
+.card-actions .card-status{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  appearance:auto !important;
+  padding:0 10px !important;
+}
+@media (max-width:380px){
+  .card-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;}
+  .card-actions .card-btn.primary{grid-column:1 / -1 !important;}
+  .card-actions .card-status{grid-column:auto !important;}
+}

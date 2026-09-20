@@ -183,8 +183,8 @@ function cardMarkup(a,index){
       <div class="tags">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
       <div class="card-actions">
         <button class="card-btn" data-preview="${a.id}" aria-label="Preview ${escapeHtml(a.name)}">◉ &nbsp;Preview</button>
-        <a class="card-btn primary" href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-apply="${a.id}">Visit / Apply ↗</a>
         <select class="card-status" data-status="${a.id}" aria-label="Update ${escapeHtml(a.name)} application status">${statuses.map(s=>`<option${r.status===s?' selected':''}>${s}</option>`).join('')}</select>
+        <a class="card-btn primary" href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-apply="${a.id}">Visit / Apply ↗</a>
       </div>
     </div>
   </article>`;
