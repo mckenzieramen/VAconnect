@@ -84,3 +84,11 @@ Firebase Authentication can provide verified email/password or passwordless emai
 - Removed broken/remote agency logo image loading from cards.
 - Moved agency branding treatment into the promotional cover area so broken inline images cannot appear.
 - Kept tracker identity cards stable while the opportunity card cover carries the agency brand treatment.
+
+
+## V22 — Cover Agency Logos
+- Added the user-supplied agency logo pack under `assets/agency-logos/`.
+- Mapped 87 supplied logos to matching VA CONNECT opportunity records.
+- Logos render inside the promotional card cover to avoid broken inline logo images.
+- Agencies without a supplied/mapped logo keep the existing text fallback.
+- No remote logo URLs are required for the card cover.

@@ -349,3 +349,24 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
 .cover-logo-mark{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex:0 0 46px;background:rgba(3,15,29,.58);border:1px solid rgba(133,231,255,.55);box-shadow:0 8px 24px rgba(0,0,0,.22);font:900 13px "Space Grotesk";letter-spacing:.04em;color:#fff;backdrop-filter:blur(8px)}
 .cover-logo-name{font:800 clamp(18px,2vw,25px)/1 "Space Grotesk",sans-serif;color:#fff;letter-spacing:-.03em;text-shadow:0 4px 18px rgba(0,0,0,.38);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .company-wordmark{font:700 12px "Space Grotesk";color:#b8d0df;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+
+/* V22 — user-supplied agency logos are displayed inside the card cover */
+.cover-logo-mark.has-image{
+  width:72px;height:52px;flex:0 0 72px;
+  display:flex;align-items:center;justify-content:center;
+  padding:7px 9px;border-radius:12px;
+  background:rgba(255,255,255,.93);
+  border:1px solid rgba(137,229,255,.55);
+  box-shadow:0 10px 28px rgba(0,0,0,.28);
+  overflow:hidden;
+}
+.cover-logo-mark.has-image img{
+  display:block;width:100%;height:100%;object-fit:contain;
+  max-width:100%;max-height:100%;
+}
+.cover-logo-mark.text-only{display:grid;place-items:center}
+.cover-logo-name{max-width:calc(100% - 86px)}
+@media(max-width:620px){
+  .cover-logo-mark.has-image{width:64px;height:48px;flex-basis:64px}
+  .cover-logo-name{max-width:calc(100% - 76px)}
+}

@@ -129,7 +129,7 @@ function tagsFor(a){
   return tags.slice(0,3);
 }
 function roleLabel(a){return (a.roles||'Virtual Assistant').replace(/\s+/g,' ').trim()}
-function logoFor(a){return null}
+function logoFor(a){return (window.VA_AGENCY_LOGOS&&window.VA_AGENCY_LOGOS[String(a.id)])||''}
 function initials(name){return name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
@@ -145,12 +145,16 @@ function cardBanner(a,index){
   const headline=b.headline||`${a.name}\nRemote Opportunities`;
   const sub=b.sub||`Explore ${roleLabel(a)} opportunities.`;
   const verified=a.id<=118;
+  const logo=logoFor(a);
+  const logoMarkup=logo
+    ? `<span class="cover-logo-mark has-image"><img src="${escapeHtml(logo)}" alt="${escapeHtml(a.name)} official logo" loading="lazy"></span>`
+    : `<span class="cover-logo-mark text-only">${escapeHtml(brandMark(a.name))}</span>`;
   return `<div class="card-banner ${theme}" data-agency="${a.id}">
     <div class="banner-badge ${theme}"><span>✓</span>#${String(index+1).padStart(2,'0')}</div>
     <span class="banner-status">${escapeHtml(getRecord(a.id).status)}</span>
     <div class="banner-copy">
       <div class="cover-logo-lockup" aria-label="${escapeHtml(a.name)} brand mark">
-        <span class="cover-logo-mark">${escapeHtml(brandMark(a.name))}</span>
+        ${logoMarkup}
         <span class="cover-logo-name">${escapeHtml(a.name)}</span>
       </div>
       <div class="banner-headline">${escapeHtml(headline).replace(/\\n/g,'<br>')}</div>
