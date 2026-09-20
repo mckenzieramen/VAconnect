@@ -238,23 +238,48 @@ function openPreview(id){
   $('#modalStatusSelect').value=r.status;
   $('#modalNote').value=r.note||'';
   $('#visitBtn').href=activeAgency.url;
+
   const frame=$('#websiteFrame'), fallback=$('#frameFallback');
   clearTimeout(frameTimer);
-  const previewUrl=`/preview?url=${encodeURIComponent(activeAgency.url)}`;
-  frame.src=previewUrl;
+  let proxyTimer=null;
+  let mode='proxy';
+  const directUrl=activeAgency.url;
+  const proxyUrl=`/preview?url=${encodeURIComponent(activeAgency.url)}`;
+  const loading=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>Loading the official website preview…</span>`;
+  const failed=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>This agency's website cannot be embedded reliably in a frame. Use Visit / Apply to open the live official website.</span>`;
+  fallback.classList.add('show');
+  fallback.innerHTML=loading;
   frame.style.display='block';
   frame.setAttribute('aria-hidden','false');
-  fallback.classList.remove('show');
-  fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>Loading the official website preview…</span>`;
-  frame.onload=()=>{clearTimeout(frameTimer);fallback.classList.remove('show');frame.style.display='block';};
-  frame.onerror=()=>{frame.style.display='none';fallback.classList.add('show');fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>The live site could not be rendered inside the preview. Use Visit / Apply to open the official website.</span>`;};
-  frameTimer=setTimeout(()=>{
-    try{
-      if(!frame.contentDocument || !frame.contentDocument.body || !frame.contentDocument.body.innerHTML.trim()){
-        frame.style.display='none';fallback.classList.add('show');fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>The official site is protected from embedded preview. Use Visit / Apply for the full live website.</span>`;
+
+  const showProxy=()=>{
+    mode='proxy';
+    clearTimeout(proxyTimer);
+    frame.onload=()=>{clearTimeout(frameTimer);fallback.classList.remove('show');frame.style.display='block';};
+    frame.onerror=()=>{frame.style.display='none';fallback.classList.add('show');fallback.innerHTML=failed;};
+    frame.src=proxyUrl;
+    proxyTimer=setTimeout(()=>{
+      // Do not leave users staring at an infinite spinner.
+      if(mode==='proxy' && fallback.classList.contains('show')){
+        frame.style.display='none';fallback.classList.add('show');fallback.innerHTML=failed;
       }
-    }catch{}
-  },9000);
+    },12000);
+  };
+
+  // First try the real site directly. Some agencies permit framing and this
+  // gives those sites the closest possible true live-site experience.
+  mode='direct';
+  frame.onload=()=>{
+    if(mode!=='direct') return;
+    // A successful direct load is enough; keep it live in the iframe.
+    clearTimeout(frameTimer); fallback.classList.remove('show'); frame.style.display='block';
+  };
+  frame.onerror=()=>{ if(mode==='direct') showProxy(); };
+  frame.src=directUrl;
+
+  // If the direct site blocks iframe embedding, switch to the same-origin
+  // proxy. This removes normal X-Frame-Options/CSP framing restrictions.
+  frameTimer=setTimeout(()=>{ if(mode==='direct') showProxy(); },4500);
   $('#agencyModal').classList.add('open');$('#agencyModal').setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
 }
 function closePreview(){clearTimeout(frameTimer);$('#websiteFrame').src='about:blank';$('#websiteFrame').style.display='none';$('#agencyModal').classList.remove('open');$('#agencyModal').setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');activeAgency=null}
