@@ -7,6 +7,8 @@ const sessionKey = 'vaConnectSessionV1';
 let state = {};
 let activeAgency = null;
 let applicationAgency = null;
+let externalAgency = null;
+let externalMode = 'preview';
 
 const header = $('#header');
 const progress = $('#progress');
@@ -76,8 +78,8 @@ function render(){
   bindCards();
 }
 function bindCards(){
-  $$('[data-details]').forEach(b=>b.addEventListener('click',()=>openModal(Number(b.dataset.details))));
-  $$('[data-apply]').forEach(b=>b.addEventListener('click',()=>openApplication(Number(b.dataset.apply))));
+  $$('[data-details]').forEach(b=>b.addEventListener('click',()=>openExternalSite(Number(b.dataset.details),'preview')));
+  $$('[data-apply]').forEach(b=>b.addEventListener('click',()=>openExternalSite(Number(b.dataset.apply),'apply')));
   $$('[data-status]').forEach(s=>s.addEventListener('change',()=>{ const id=Number(s.dataset.status); getRecord(id).status=s.value; saveState(); render(); }));
 }
 
@@ -102,6 +104,34 @@ $('#modalNote').addEventListener('input',e=>{if(!activeAgency)return;getRecord(a
 ['searchInput','scopeFilter','regionFilter','statusFilter'].forEach(id=>$( '#'+id).addEventListener(id==='searchInput'?'input':'change',render));
 $('#resetBtn').addEventListener('click',()=>{$('#searchInput').value='';scopeFilter.value='';regionFilter.value='';$('#statusFilter').value='';render();});
 
+function openExternalSite(id, mode='preview'){
+  externalAgency=VA_AGENCIES.find(a=>a.id===id); if(!externalAgency)return;
+  externalMode=mode;
+  const rec=getRecord(id), modal=$('#externalSiteModal'), frame=$('#externalSiteFrame');
+  $('#externalSiteTitle').textContent=externalAgency.name;
+  $('#externalSiteSubtitle').textContent=mode==='apply' ? 'Official application website' : 'Official website preview';
+  $('#externalSiteEyebrow').textContent=mode==='apply' ? 'APPLY ON OFFICIAL SITE' : 'OPPORTUNITY PREVIEW';
+  $('#externalSiteFavicon').textContent=initials(externalAgency.name);
+  $('#externalSiteUrl').textContent=externalAgency.url;
+  $('#externalSiteStatus').value=rec.status;
+  $('#externalMarkApplied').hidden=mode!=='apply';
+  $('#externalSiteLoading').classList.remove('hidden');
+  frame.src='about:blank';
+  setTimeout(()=>{ frame.src=externalAgency.url; },30);
+  modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('modal-open');
+}
+function closeExternalSite(){
+  const modal=$('#externalSiteModal'), frame=$('#externalSiteFrame');
+  modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('modal-open');
+  frame.src='about:blank'; externalAgency=null;
+}
+$('#externalSiteFrame').addEventListener('load',()=>$('#externalSiteLoading').classList.add('hidden'));
+$('#externalSiteClose').addEventListener('click',closeExternalSite);
+$$('[data-close-external]').forEach(x=>x.addEventListener('click',closeExternalSite));
+$('#externalOpenNew').addEventListener('click',()=>{ if(externalAgency) window.open(externalAgency.url,'_blank','noopener,noreferrer'); });
+$('#externalSiteStatus').addEventListener('change',e=>{ if(!externalAgency)return; getRecord(externalAgency.id).status=e.target.value; saveState(); render(); });
+$('#externalMarkApplied').addEventListener('click',()=>{ if(!externalAgency)return; getRecord(externalAgency.id).status='Applied'; saveState(); render(); $('#externalSiteStatus').value='Applied'; $('#externalMarkApplied').textContent='Applied ✓'; });
+
 function openApplication(id){
   applicationAgency=VA_AGENCIES.find(a=>a.id===id); if(!applicationAgency)return;
   const email=currentSession();
@@ -125,7 +155,7 @@ function openApplication(id){
 }
 function closeApplication(){ $('#applicationModal').classList.remove('open'); $('#applicationModal').setAttribute('aria-hidden','true'); document.body.classList.remove('modal-open'); applicationAgency=null; }
 $('#applicationClose').addEventListener('click',closeApplication); $$('[data-close-application]').forEach(x=>x.addEventListener('click',closeApplication));
-$('#modalApplyBtn').addEventListener('click',()=>{ if(activeAgency){ const id=activeAgency.id; closeModal(); setTimeout(()=>openApplication(id),80); }});
+$('#modalApplyBtn').addEventListener('click',()=>{ if(activeAgency){ const id=activeAgency.id; closeModal(); setTimeout(()=>openExternalSite(id,'apply'),80); }});
 $('#applicationForm').addEventListener('submit',e=>{
   e.preventDefault(); if(!applicationAgency)return;
   const rec=getRecord(applicationAgency.id);

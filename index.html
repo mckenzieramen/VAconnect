@@ -98,8 +98,24 @@
     <div class="modal-top"><div class="modal-brand"><div class="modal-favicon" id="modalFavicon">VA</div><div><span class="eyebrow">OPPORTUNITY DETAILS</span><h2 id="modalTitle">Agency</h2></div></div><span class="status-badge" id="modalStatus">NOT STARTED</span></div>
     <div class="detail-cover" id="modalCover"></div>
     <div class="modal-details"><div><span>REACH</span><strong id="modalRegion"></strong></div><div><span>ROLES</span><strong id="modalRoles"></strong></div><div><span>ELIGIBILITY</span><strong id="modalEligibility"></strong></div></div>
-    <div class="modal-actions"><button class="btn primary apply-now-btn" id="modalApplyBtn" type="button">Apply on VA Connect <span>→</span></button><a class="btn ghost" id="visitBtn" target="_blank" rel="noopener noreferrer">Visit Official Site ↗</a><select id="modalStatusSelect"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select></div>
+    <div class="modal-actions"><button class="btn primary apply-now-btn" id="modalApplyBtn" type="button">Apply on Official Site <span>→</span></button><a class="btn ghost" id="visitBtn" target="_blank" rel="noopener noreferrer">Visit Official Site ↗</a><select id="modalStatusSelect"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select></div>
     <label class="notes-label">PERSONAL NOTE<textarea id="modalNote" placeholder="Add a reminder, interview date, follow-up, salary note, or other detail..."></textarea></label>
+  </div>
+</div>
+
+<div class="modal external-site-modal" id="externalSiteModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-external></div>
+  <div class="external-site-panel" role="dialog" aria-modal="true" aria-labelledby="externalSiteTitle">
+    <div class="external-site-head">
+      <div class="external-site-brand"><div class="modal-favicon" id="externalSiteFavicon">VA</div><div><span class="eyebrow" id="externalSiteEyebrow">OPPORTUNITY PREVIEW</span><h2 id="externalSiteTitle">Agency</h2><p id="externalSiteSubtitle">Official website</p></div></div>
+      <div class="external-site-head-actions"><select id="externalSiteStatus" aria-label="Application status"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select><button class="modal-close" id="externalSiteClose" aria-label="Close">×</button></div>
+    </div>
+    <div class="external-site-toolbar">
+      <span id="externalSiteUrl">Loading official website…</span>
+      <div><button class="btn ghost" id="externalOpenNew" type="button">Open in New Tab ↗</button><button class="btn primary" id="externalMarkApplied" type="button">Mark Applied ✓</button></div>
+    </div>
+    <div class="external-site-frame-wrap"><div class="external-site-loading" id="externalSiteLoading"><span class="loader-dot"></span>Loading the official website…</div><iframe id="externalSiteFrame" title="Official agency website" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <div class="external-site-fallback"><strong>Application page not showing?</strong><span>Some companies prevent their websites from being embedded. Use “Open in New Tab” to continue directly on the official site.</span></div>
   </div>
 </div>
 
