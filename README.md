@@ -116,3 +116,10 @@ V24: Replaced the BELAY cover logo with the user-supplied official positive logo
   - BruntWork
   - VaVa Virtual Assistants
 - Kept unsupported agencies without a verified supplied logo rather than using broken remote images, generated logos, or initials as fake logos.
+
+### V28 — Restore All Available Agency Logos
+- Restored the complete supplied local logo set from the prior project/logo packs.
+- Cards use the real logo inside the compact cover logo box.
+- Tracker rows now use the same real logo box instead of initials.
+- Agencies without a supplied local logo now try the agency website favicon from its own official domain.
+- No iframe preview; official sites remain Visit / Apply destinations.

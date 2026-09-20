@@ -91,8 +91,12 @@ function trackedAgencies(){
 function trackerRow(a){
   const r=getRecord(a.id);
   const statusClass=r.status.toLowerCase().replace(/\s+/g,'-');
+  const logo=logoFor(a);
+  const logoBox=logo
+    ? `<span class="tracker-logo has-image"><img src="${escapeHtml(logo)}" alt="${escapeHtml(a.name)} logo" loading="lazy" referrerpolicy="no-referrer"></span>`
+    : `<span class="tracker-logo text-only" aria-hidden="true"><span class="generic-brand-icon">✦</span></span>`;
   return `<article class="tracker-row" data-track-id="${a.id}">
-    <div class="tracker-company"><span class="tracker-logo">${escapeHtml(initials(a.name))}</span><div><strong>${escapeHtml(a.name)}</strong><small>${escapeHtml(regionPrimary(a))} · ${escapeHtml(roleLabel(a))}</small></div></div>
+    <div class="tracker-company">${logoBox}<div><strong>${escapeHtml(a.name)}</strong><small>${escapeHtml(regionPrimary(a))} · ${escapeHtml(roleLabel(a))}</small></div></div>
     <div class="tracker-stage"><span class="tracker-stage-dot ${statusClass}"></span><select class="tracker-stage-select" data-track-status="${a.id}" aria-label="Update ${escapeHtml(a.name)} status">${statuses.map(s=>`<option${r.status===s?' selected':''}>${s}</option>`).join('')}</select></div>
     <div class="tracker-note">${r.note?escapeHtml(r.note):'No personal note added'}</div>
     <div class="tracker-actions"><button type="button" class="tracker-open" data-track-open="${a.id}">View</button><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-track-apply="${a.id}">Apply ↗</a></div>
@@ -129,15 +133,15 @@ function tagsFor(a){
   return tags.slice(0,3);
 }
 function roleLabel(a){return (a.roles||'Virtual Assistant').replace(/\s+/g,' ').trim()}
-function logoFor(a){return (window.VA_AGENCY_LOGOS&&window.VA_AGENCY_LOGOS[String(a.id)])||''}
-function initials(name){return name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
-function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-
-function brandMark(name){
-  const words=String(name||'').trim().split(/\s+/).filter(Boolean);
-  if(!words.length) return 'VA';
-  if(words.length===1) return words[0].slice(0,2).toUpperCase();
-  return words.slice(0,2).map(w=>w[0]).join('').toUpperCase();
+function officialFavicon(a){
+  try{
+    const u=new URL(a.url);
+    return `${u.origin}/favicon.ico`;
+  }catch{return ''}
+}
+function logoFor(a){
+  const local=(window.VA_AGENCY_LOGOS&&window.VA_AGENCY_LOGOS[String(a.id)])||'';
+  return local||officialFavicon(a);
 }
 function cardBanner(a,index){
   const b=bannerMap[a.id]||{};
@@ -147,7 +151,7 @@ function cardBanner(a,index){
   const verified=a.id<=118;
   const logo=logoFor(a);
   const logoMarkup=logo
-    ? `<span class="cover-logo-mark has-image"><img src="${escapeHtml(logo)}" alt="${escapeHtml(a.name)} official logo" loading="lazy"></span>`
+    ? `<span class="cover-logo-mark has-image"><img src="${escapeHtml(logo)}" alt="${escapeHtml(a.name)} official logo" loading="lazy" referrerpolicy="no-referrer"></span>`
     : `<span class="cover-logo-mark text-only" aria-hidden="true"><span class="generic-brand-icon">✦</span></span>`;
   return `<div class="card-banner ${theme}" data-agency="${a.id}">
     <div class="banner-badge ${theme}"><span>✓</span>#${String(index+1).padStart(2,'0')}</div>
@@ -224,7 +228,7 @@ function openPreview(id){
   activeAgency=(window.VA_AGENCIES||[]).find(a=>a.id===id); if(!activeAgency)return;
   const r=getRecord(id), logo=logoFor(activeAgency);
   $('#modalTitle').textContent=activeAgency.name;
-  $('#modalFavicon').innerHTML=logo?`<img src="${logo}" alt="" style="width:100%;height:100%;object-fit:contain;background:#fff;border-radius:11px;padding:4px">`:escapeHtml(initials(activeAgency.name));
+  $('#modalFavicon').innerHTML=logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:contain;background:#fff;border-radius:11px;padding:4px">`:`<span class="generic-brand-icon">✦</span>`;
   $('#modalStatus').textContent=r.status.toUpperCase();
   $('#modalUrl').textContent=hostname(activeAgency.url);
   $('#modalRegion').textContent=activeAgency.region||'Global';
@@ -238,7 +242,7 @@ function openPreview(id){
   frame.src='about:blank';
   frame.style.display='none';
   fallback.classList.add('show');
-  fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>VA CONNECT preview. The official site opens securely in a new tab so blocked iframe pages never appear here.</span>`;
+  fallback.innerHTML=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>VA CONNECT preview. The official site opens securely in a new tab so blocked iframe pages never appear here.</span>`;
   $('#agencyModal').classList.add('open');$('#agencyModal').setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
 }
 function closePreview(){clearTimeout(frameTimer);$('#websiteFrame').src='about:blank';$('#websiteFrame').style.display='none';$('#agencyModal').classList.remove('open');$('#agencyModal').setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');activeAgency=null}

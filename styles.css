@@ -415,3 +415,24 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
 .preview-logo-box{width:68px;height:68px;border-radius:14px;background:#fff;border:1px solid rgba(109,222,255,.65);display:grid;place-items:center;padding:9px;box-sizing:border-box;box-shadow:0 10px 28px rgba(0,0,0,.3)}
 .preview-logo-box img{width:100%;height:100%;object-fit:contain;border-radius:7px}
 @media(max-width:620px){.cover-logo-mark{width:46px!important;height:46px!important;flex-basis:46px!important}}
+
+
+/* V28 logo consistency: use the same compact real-logo box in cards, tracker and preview. */
+.cover-logo-mark.has-image,
+.tracker-logo.has-image{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  flex:0 0 auto;
+}
+.cover-logo-mark.has-image img{
+  width:100%;height:100%;object-fit:contain;display:block;
+}
+.tracker-logo.has-image{
+  width:46px;height:46px;border-radius:12px;
+  background:#fff;border:1px solid rgba(0,217,255,.34);
+  box-shadow:0 0 18px rgba(0,217,255,.12);
+}
+.tracker-logo.has-image img{width:100%;height:100%;object-fit:contain;padding:5px;display:block;}
+.tracker-logo.text-only{display:inline-flex;align-items:center;justify-content:center;}
