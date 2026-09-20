@@ -2,9 +2,41 @@
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const statuses=['Not Started','Saved','Applied','Interview','Offer','Rejected','Not Eligible'];
-const stateKey='vaConnectReferenceV11';
-const state=JSON.parse(localStorage.getItem(stateKey)||'{}');
+const legacyStateKey='vaConnectReferenceV11';
+const userKey='vaConnectUserEmail';
+const guestStateKey='vaConnectGuestTracker';
+let currentUserEmail=(localStorage.getItem(userKey)||'').trim().toLowerCase();
+let state=loadStoredState();
 let activeAgency=null, frameTimer=null;
+
+function loadStoredState(){
+  const key=currentUserEmail?`vaConnectTracker:${currentUserEmail}`:guestStateKey;
+  try{return JSON.parse(localStorage.getItem(key)||localStorage.getItem(legacyStateKey)||'{}')||{}}catch{return {}}
+}
+function setUserEmail(email){
+  const normalized=String(email||'').trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) return false;
+  const previous=state;
+  currentUserEmail=normalized;
+  localStorage.setItem(userKey,normalized);
+  const userKeyName=`vaConnectTracker:${normalized}`;
+  const existing=localStorage.getItem(userKeyName);
+  state=existing?loadStoredState():previous;
+  localStorage.setItem(userKeyName,JSON.stringify(state));
+  renderCards();updateStats();renderTracker();updateAuthUI();
+  return true;
+}
+function clearUserEmail(){currentUserEmail='';localStorage.removeItem(userKey);state=loadStoredState();renderCards();updateStats();renderTracker();updateAuthUI();}
+function updateAuthUI(){
+  const signed=!!currentUserEmail;
+  const sign=$('#signInBtn'),create=$('#createAccountBtn');
+  if(sign) sign.textContent=signed?currentUserEmail:'Sign In';
+  if(create) create.textContent=signed?'Sign Out':'Create Account';
+  const email=$('#authEmail'),account=$('#authAccountState');
+  if(email && signed) email.value=currentUserEmail;
+  if(account) account.textContent=signed?`Signed in as ${currentUserEmail}`:'Sign in with your email to keep your tracker organized.';
+}
+
 
 const logoMap={};
 
@@ -32,6 +64,7 @@ function getRecord(id){
 function saveState(){
   localStorage.setItem(stateKey,JSON.stringify(state));
   updateStats();
+  renderTracker();
   const el=$('#saveIndicator'); if(el){el.textContent='Saved just now';clearTimeout(saveState.t);saveState.t=setTimeout(()=>el.textContent='Your progress is saved automatically',1200);}
 }
 function getStatusCounts(){
@@ -48,6 +81,41 @@ function updateStats(){
   ['interviewCount','heroInterview'].forEach(id=>{const e=$('#'+id);if(e)e.textContent=c.interview});
   ['offerCount','heroOffer'].forEach(id=>{const e=$('#'+id);if(e)e.textContent=c.offer});
   const total=$('#heroTotal');if(total)total.textContent=(window.VA_AGENCIES?.length||118)+'+';
+}
+
+let trackerFilter='all';
+function trackedAgencies(){
+  return (window.VA_AGENCIES||[]).filter(a=>getRecord(a.id).status!=='Not Started');
+}
+function trackerRow(a){
+  const r=getRecord(a.id);
+  const statusClass=r.status.toLowerCase().replace(/\s+/g,'-');
+  return `<article class="tracker-row" data-track-id="${a.id}">
+    <div class="tracker-company"><span class="tracker-logo">${escapeHtml(initials(a.name))}</span><div><strong>${escapeHtml(a.name)}</strong><small>${escapeHtml(regionPrimary(a))} · ${escapeHtml(roleLabel(a))}</small></div></div>
+    <div class="tracker-stage"><span class="tracker-stage-dot ${statusClass}"></span><span>${escapeHtml(r.status)}</span></div>
+    <div class="tracker-note">${r.note?escapeHtml(r.note):'No personal note added'}</div>
+    <div class="tracker-actions"><button type="button" class="tracker-open" data-track-open="${a.id}">View</button><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-track-apply="${a.id}">Apply ↗</a></div>
+  </article>`;
+}
+function renderTracker(){
+  const agencies=window.VA_AGENCIES||[];
+  const tracked=trackedAgencies();
+  const counts={Saved:0,Applied:0,Interview:0,Offer:0};
+  tracked.forEach(a=>{const st=getRecord(a.id).status;if(counts[st]!==undefined)counts[st]++});
+  const all=$('#trackAllCount');if(all)all.textContent=tracked.length;
+  const saved=$('#trackSavedCount');if(saved)saved.textContent=counts.Saved;
+  const applied=$('#trackAppliedCount');if(applied)applied.textContent=counts.Applied;
+  const interview=$('#trackInterviewCount');if(interview)interview.textContent=counts.Interview;
+  const offer=$('#trackOfferCount');if(offer)offer.textContent=counts.Offer;
+  const list=trackerFilter==='all'?tracked:tracked.filter(a=>getRecord(a.id).status===trackerFilter);
+  const title=$('#trackerTitle'),subtitle=$('#trackerSubtitle');
+  if(title)title.textContent=trackerFilter==='all'?'All Tracked Opportunities':`${trackerFilter} Opportunities`;
+  if(subtitle)subtitle.textContent=list.length?`${list.length} ${list.length===1?'opportunity':'opportunities'} in this stage.`:'Nothing is in this stage yet.';
+  const container=$('#trackerList'),empty=$('#trackerEmpty');
+  if(container)container.innerHTML=list.map(trackerRow).join('');
+  if(empty)empty.hidden=list.length!==0;
+  $$('.tracker-stat').forEach(btn=>btn.classList.toggle('active',(btn.dataset.trackFilter||'all')===trackerFilter));
+  $$('#trackerList [data-track-open]').forEach(btn=>btn.addEventListener('click',()=>openPreview(Number(btn.dataset.trackOpen))));
 }
 function hostname(url){try{return new URL(url).hostname.replace(/^www\./,'www.')}catch{return 'official website'}}
 function regionPrimary(a){return (a.region||'Global').split('/')[0].trim()}
@@ -197,24 +265,29 @@ window.addEventListener('scroll',()=>{
   progress.style.width=(max?scrollY/max*100:0)+'%';
   updateActiveNav();
 }, {passive:true});
-$('#menuBtn').addEventListener('click',()=>{
+$('#menuBtn')?.addEventListener('click',()=>{
   const nav=$('#nav');const open=nav.classList.toggle('mobile-open');$('#menuBtn').textContent=open?'×':'☰';
 });
 $$('#nav a').forEach(a=>a.addEventListener('click',()=>{$('#nav').classList.remove('mobile-open');$('#menuBtn').textContent='☰'}));
-$('#headerSearchBtn').addEventListener('click',()=>{document.querySelector('#directory').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#searchInput').focus(),450)});
-$('#signInBtn').addEventListener('click',()=>$('#authModal').classList.add('open'));
-$('#createAccountBtn').addEventListener('click',()=>$('#authModal').classList.add('open'));
+$('#headerSearchBtn')?.addEventListener('click',()=>{document.querySelector('#directory').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#searchInput').focus(),450)});
+$('#signInBtn')?.addEventListener('click',()=>{if(currentUserEmail){clearUserEmail()}else{$('#authTitle').textContent='Sign In';$('#authModal').classList.add('open')}});
+$('#createAccountBtn')?.addEventListener('click',()=>{if(currentUserEmail){clearUserEmail()}else{$('#authTitle').textContent='Create Account';$('#authModal').classList.add('open')}});
+$('#authEmailForm')?.addEventListener('submit',e=>{e.preventDefault();const ok=setUserEmail($('#authEmail').value);if(ok){$('#authMessage').textContent='Your tracker is now tied to this email on this device. Email reminders are enabled for the 8:00 AM preference.';$('#authModal').classList.remove('open');}else $('#authMessage').textContent='Please enter a valid email address.'});
+$('#authSignOut')?.addEventListener('click',()=>{clearUserEmail();$('#authModal').classList.remove('open')});
 $$('[data-close-auth]').forEach(x=>x.addEventListener('click',()=>$('#authModal').classList.remove('open')));
-$('#modalClose').addEventListener('click',closePreview);
+$('#modalClose')?.addEventListener('click',closePreview);
 $$('[data-close-modal]').forEach(x=>x.addEventListener('click',closePreview));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();$('#authModal').classList.remove('open')}});
 
-['searchInput','regionFilter','roleFilter','statusFilter','sortFilter'].forEach(id=>$(('#'+id)).addEventListener(id==='searchInput'?'input':'change',renderCards));
-$('#modalStatusSelect').addEventListener('change',()=>{
+['searchInput','regionFilter','roleFilter','statusFilter','sortFilter'].forEach(id=>{const e=$('#'+id);if(e)e.addEventListener(id==='searchInput'?'input':'change',renderCards)});
+$('#modalStatusSelect')?.addEventListener('change',()=>{
   if(!activeAgency)return;getRecord(activeAgency.id).status=$('#modalStatusSelect').value;saveState();$('#modalStatus').textContent=$('#modalStatusSelect').value.toUpperCase();renderCards();
 });
-$('#modalNote').addEventListener('input',()=>{
+$('#modalNote')?.addEventListener('input',()=>{
   if(!activeAgency)return;getRecord(activeAgency.id).note=$('#modalNote').value;saveState();
 });
+$$('[data-track-filter]').forEach(btn=>btn.addEventListener('click',()=>{trackerFilter=btn.dataset.trackFilter||'all';renderTracker();document.querySelector('#track').scrollIntoView({behavior:'smooth',block:'start'});}));
+$('#trackerClear')?.addEventListener('click',()=>document.querySelector('#directory')?.scrollIntoView({behavior:'smooth',block:'start'}));
+$('#trackerBrowse')?.addEventListener('click',()=>document.querySelector('#directory')?.scrollIntoView({behavior:'smooth',block:'start'}));
 
-populateFilters();renderCards();updateStats();updateActiveNav();
+populateFilters();renderCards();updateStats();renderTracker();updateActiveNav();updateAuthUI();

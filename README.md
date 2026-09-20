@@ -44,3 +44,26 @@ It will never silently use an old asset, a third-party logo service, a generated
 - Opportunity cards now use a consistent screenshot-style structure: promotional banner, number badge, dynamic status badge, company row, favorite control, metadata, tags, Preview, and Visit / Apply.
 - Preserved the data-driven 118-agency architecture, search/filter/sort, status tracking, favorites, preview modal, and external application URLs.
 - Added dynamic navigation active-pill behavior based on the visible section.
+
+### V16 tracking revision
+- Added a fully visible Track Applications workspace linked to the header navigation.
+- Shows Total Tracked, Saved, Applied, Interview, and Offers counts.
+- Shows tracked opportunities with current stage, notes, View, and Apply actions.
+- Tracker updates immediately when status/favorite/note changes are saved.
+- Existing 118 opportunity data and directory functionality preserved.
+
+
+## V17 — Personal Tracker, Email Profile & Dedicated Pages
+- Track Applications now has a dedicated `tracker.html` workspace instead of only an in-page strip.
+- Tracker is organized into Total Tracked, Saved, Applied, Interview and Offer stages.
+- Favorites and status changes are included in the tracked pipeline.
+- Email profile sign-in is added so tracker data is keyed by the user's email on the device.
+- Added dedicated Discover, About and Resources pages.
+- About now states the platform objective: turn a scattered VA job search into an organized application journey.
+- Discover explains Explore → Compare → Save & Track → Keep Applying.
+- Added the 8:00 AM Asia/Manila reminder UX.
+
+### Morning email automation
+A Firebase/Cloud Functions backend scaffold is included under `functions/`. It uses a scheduled function at `0 8 * * *` with timezone `Asia/Manila` and Resend for email delivery. This is intentionally not presented as live until the VA CONNECT Firebase project and Resend sender/API secret are connected. The static Cloudflare Pages frontend alone cannot securely send scheduled emails to users or persist their tracker across devices.
+
+Firebase Authentication can provide verified email/password or passwordless email-link sign-in; the current V17 frontend keeps a lightweight email-profile fallback so the UI remains usable before backend credentials are connected.
