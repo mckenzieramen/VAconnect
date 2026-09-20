@@ -37,3 +37,5 @@ Users can submit an in-site application form for each opportunity. The submissio
 - Removed the separate Preview action from card controls; the cover itself is the preview/details trigger.
 - Apply Now still opens the official agency site in a new tab and records Applied.
 - Existing search, filters, accounts, notes, and status tracking are preserved.
+
+V9 change: opportunity cards now render the agency's REAL official website directly inside the card cover using an iframe. The preview is visible on the page without opening a separate preview modal. Some agencies may prevent iframe embedding with X-Frame-Options or CSP; those sites cannot be embedded by browser security and will show the browser's blocked-frame behavior instead.

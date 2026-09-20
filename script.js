@@ -37,18 +37,12 @@ function logoMarkup(a){
 function coverMarkup(a, compact=false){
   const theme=coverTheme(a.id);
   const domain=domainOf(a.url);
-  const roles=(a.roles||'Virtual Assistant opportunities').split(',').slice(0,2).join(' · ');
   return `<div class="agency-cover ${theme}">
     <div class="preview-browser">
       <div class="preview-browser-bar"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span><span class="preview-domain">${escapeHtml(domain)}</span></div>
-      <div class="preview-site">
-        <div class="preview-site-page">
-          <div class="preview-brand">${logoMarkup(a)}<div><strong>${escapeHtml(a.name)}</strong><span>${escapeHtml(roles)}</span></div></div>
-          <div class="preview-site-kicker">OFFICIAL WEBSITE</div>
-        </div>
-      </div>
+      <iframe class="preview-iframe" src="${escapeHtml(a.url)}" title="${escapeHtml(a.name)} official website" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <div class="preview-iframe-fade" aria-hidden="true"></div>
     </div>
-    <div class="cover-caption">WEBSITE PREVIEW</div>
   </div>`;
 }
 
@@ -85,7 +79,7 @@ function render(){
   $('#emptyState').hidden=!!list.length;
   list.forEach(a=>{
     const rec=getRecord(a.id), card=document.createElement('article'); card.className='agency-card reveal visible';
-    card.innerHTML=`<button class="agency-cover-button" type="button" data-details="${a.id}" aria-label="View ${escapeHtml(a.name)} preview">${coverMarkup(a)}</button>
+    card.innerHTML=`<div class="agency-cover-wrap">${coverMarkup(a)}</div>
       <div class="agency-body"><div class="agency-title"><div><span class="agency-index">#${String(a.id).padStart(3,'0')}</span><h3>${escapeHtml(a.name)}</h3></div><span class="status-pill ${statusClass(rec.status)}">${escapeHtml(rec.status)}</span></div>
       <p class="agency-role">${escapeHtml(a.roles)}</p><div class="agency-tags"><span>${escapeHtml(a.scope)}</span><span>${escapeHtml(splitRegions(a.region)[0]||'Global')}</span></div>
       <div class="agency-actions"><button class="apply-btn apply-now-card" data-apply="${a.id}" type="button">Apply Now ↗</button><a class="visit-btn" href="${a.url}" target="_blank" rel="noopener noreferrer">Visit ↗</a><select class="card-status" data-status="${a.id}" aria-label="Application status for ${escapeHtml(a.name)}">${statuses.map(s=>`<option ${s===rec.status?'selected':''}>${s}</option>`).join('')}</select></div></div>`;

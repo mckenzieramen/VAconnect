@@ -66,3 +66,10 @@
 .agency-actions{grid-template-columns:1fr 1fr 112px}
 @media(max-width:950px){.agency-actions{grid-template-columns:1fr 1fr!important}.agency-actions .card-status{grid-column:1/-1}}
 @media(max-width:650px){.agency-cover{height:190px}.preview-site{left:16px;right:16px}.preview-site-page{padding:18px 14px}.preview-brand strong{font-size:15px}.agency-actions{grid-template-columns:1fr 1fr!important}.agency-actions .card-status{grid-column:1/-1}}
+
+/* v9: REAL agency websites render directly inside each opportunity card. */
+.agency-cover-wrap{display:block;overflow:hidden}
+.agency-cover-wrap .agency-cover{pointer-events:none}
+.preview-browser{pointer-events:none}
+.preview-iframe{position:absolute;z-index:1;left:0;right:0;top:27px;bottom:0;width:100%;height:calc(100% - 27px);border:0;background:#fff;transform-origin:top left;}
+.preview-iframe-fade{position:absolute;z-index:2;left:0;right:0;bottom:0;height:34px;background:linear-gradient(180deg,transparent,#071a2bdd);pointer-events:none}
