@@ -80,8 +80,7 @@ Firebase Authentication can provide verified email/password or passwordless emai
 - Opportunity cards now use a clean two-row action layout: Preview + status dropdown on the first row, with a full-width rectangular Visit / Apply CTA underneath.
 - Status remains directly editable on each card and continues to persist into Track Applications.
 
-
-## V20 Logo Update
-- Agency cards and Track Applications no longer display letter initials as the primary logo treatment.
-- They attempt the agency's own official-domain `/favicon.ico`, then `/apple-touch-icon.png`, based on the agency URL.
-- Existing local-logo policy remains: no third-party logo services and no legacy project logo assets.
+### V21 — Cover branding cleanup
+- Removed broken/remote agency logo image loading from cards.
+- Moved agency branding treatment into the promotional cover area so broken inline images cannot appear.
+- Kept tracker identity cards stable while the opportunity card cover carries the agency brand treatment.

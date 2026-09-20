@@ -344,5 +344,8 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
 @media (max-width:900px){.tracker-stage{min-width:130px}.tracker-stage-select{min-width:105px}}
 @media (max-width:620px){.tracker-stage{width:100%;justify-content:flex-start}.tracker-stage-select{flex:1}.card-actions{grid-template-columns:1fr 1fr}.card-btn.primary{grid-column:1/-1}.card-status{grid-column:auto}}
 
-/* V20 official-domain logo presentation: no initials on cards or tracker. */
-.mini-logo,.tracker-logo{background:#f7fbff;overflow:hidden;display:grid;place-items:center;flex:0 0 auto}.mini-logo img,.tracker-logo img{width:100%;height:100%;object-fit:contain;padding:5px;background:#fff}.mini-logo{border:1px solid rgba(45,181,226,.28)}.tracker-logo{border:1px solid rgba(45,181,226,.32);border-radius:11px}.logo-fallback{color:#6e8ca2;font-size:16px}
+/* V21: agency branding lives on the cover, avoiding broken inline logo images */
+.cover-logo-lockup{position:relative;z-index:3;display:flex;align-items:center;gap:11px;margin-bottom:12px;max-width:92%}
+.cover-logo-mark{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex:0 0 46px;background:rgba(3,15,29,.58);border:1px solid rgba(133,231,255,.55);box-shadow:0 8px 24px rgba(0,0,0,.22);font:900 13px "Space Grotesk";letter-spacing:.04em;color:#fff;backdrop-filter:blur(8px)}
+.cover-logo-name{font:800 clamp(18px,2vw,25px)/1 "Space Grotesk",sans-serif;color:#fff;letter-spacing:-.03em;text-shadow:0 4px 18px rgba(0,0,0,.38);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.company-wordmark{font:700 12px "Space Grotesk";color:#b8d0df;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
