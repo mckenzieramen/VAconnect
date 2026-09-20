@@ -311,3 +311,6 @@ $('#trackerClear')?.addEventListener('click',()=>document.querySelector('#direct
 $('#trackerBrowse')?.addEventListener('click',()=>document.querySelector('#directory')?.scrollIntoView({behavior:'smooth',block:'start'}));
 
 populateFilters();renderCards();updateStats();renderTracker();updateActiveNav();updateAuthUI();
+
+// V30: support deep links from standalone pages and the tracker.
+(()=>{const params=new URLSearchParams(location.search);const auth=params.get('auth');const previewId=Number(params.get('preview'));if(auth&&['signin','create'].includes(auth)){const title=$('#authTitle');if(title)title.textContent=auth==='create'?'Create Account':'Sign In';$('#authModal')?.classList.add('open')}if(Number.isInteger(previewId)&&previewId>0){setTimeout(()=>openPreview(previewId),80)}})();
