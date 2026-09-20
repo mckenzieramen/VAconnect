@@ -1,96 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="VA 100 — modern virtual assistance, customer support, admin support, and digital solutions.">
-<title>VA 100 — Virtual Assistance, Elevated</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="VA Connect — a visual directory for discovering virtual assistant agencies, visiting opportunities, and tracking applications.">
+<meta name="theme-color" content="#07111f">
+<title>VA Connect — Connect. Delegate. Elevate.</title>
+<link rel="icon" type="image/png" href="va-connect-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="progress" id="progress"></div>
 <header class="site-header" id="header">
-  <a class="brand" href="#home" aria-label="VA 100 home"><span class="brand-mark">100</span><span>VA <b>100</b></span></a>
-  <nav id="nav"><a class="active" href="#home">Home</a><a href="#services">Services</a><a href="#process">Process</a><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
-  <a class="header-cta" href="#contact">Work With Me <span>↗</span></a>
+  <a class="brand" href="#home" aria-label="VA Connect home"><img src="va-connect-logo.png" alt="VA Connect logo"><span>VA <b>CONNECT</b></span></a>
+  <nav id="nav"><a class="active" href="#home">Home</a><a href="#directory">VA Directory</a><a href="#how">How It Works</a><a href="#about">About</a></nav>
+  <a class="header-cta" href="#directory">Explore Opportunities <span>↗</span></a>
   <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
 </header>
 
 <main>
 <section class="hero section" id="home">
   <div class="hero-copy reveal">
-    <div class="eyebrow"><span class="pulse"></span> AVAILABLE FOR SELECT PROJECTS</div>
-    <h1>Virtual support.<br><em>100% dependable.</em></h1>
-    <p class="hero-text">A modern virtual assistant partner for customer support, admin operations, and digital tasks — built to make your day lighter and your business sharper.</p>
-    <div class="hero-actions"><a class="btn primary" href="#contact">Start a Conversation <span>→</span></a><a class="btn ghost" href="#work">Explore My Work</a></div>
-    <div class="trust-row"><div><strong>100%</strong><span>Focused on your goals</span></div><i></i><div><strong>24/7</strong><span>Systems-ready support</span></div><i></i><div><strong>∞</strong><span>Room to scale</span></div></div>
+    <div class="eyebrow"><span class="pulse"></span> 118 OPPORTUNITIES IN ONE PLACE</div>
+    <h1>Find your next<br><em>VA opportunity.</em></h1>
+    <p class="hero-text">VA Connect turns a large VA and remote-work directory into a visual, searchable workspace. Explore agencies, open their websites, and keep your own application progress organized.</p>
+    <div class="hero-actions"><a class="btn primary" href="#directory">Explore the Directory <span>→</span></a><a class="btn ghost" href="#how">See How It Works</a></div>
+    <div class="trust-row"><div><strong id="heroTotal">118</strong><span>listed opportunities</span></div><i></i><div><strong>7</strong><span>application stages</span></div><i></i><div><strong>∞</strong><span>your own tracking</span></div></div>
   </div>
   <div class="hero-visual reveal delay">
     <div class="orb orb-one"></div><div class="orb orb-two"></div>
-    <div class="dashboard-card">
-      <div class="dash-top"><span>VA 100 / WORKSPACE</span><span class="live"><b></b> LIVE</span></div>
-      <div class="dash-title">Today’s focus</div>
-      <div class="focus-card"><div class="focus-icon">✓</div><div><strong>Customer experience</strong><span>Inbox, follow-ups & support</span></div><div class="mini-bar"><i></i></div></div>
-      <div class="focus-card"><div class="focus-icon purple">⌁</div><div><strong>Operations</strong><span>Orders, records & admin</span></div><div class="mini-bar"><i style="width:78%"></i></div></div>
-      <div class="focus-card"><div class="focus-icon gold">✦</div><div><strong>Digital projects</strong><span>Web, content & systems</span></div><div class="mini-bar"><i style="width:91%"></i></div></div>
-      <div class="dash-footer"><span>Weekly capacity</span><strong>86%</strong></div><div class="capacity"><i></i></div>
+    <div class="directory-preview">
+      <div class="dash-top"><span>VA CONNECT / OPPORTUNITIES</span><span class="live"><b></b> LIVE</span></div>
+      <div class="preview-search">⌕ <span>Search agencies, roles or regions...</span></div>
+      <div class="preview-row"><div class="preview-logo">VA</div><div><strong>Wing</strong><span>Philippines · India · LATAM · USA</span></div><em>APPLIED</em></div>
+      <div class="preview-row"><div class="preview-logo cyan">A</div><div><strong>Athena</strong><span>Philippines · Executive Assistant</span></div><em class="interview">INTERVIEW</em></div>
+      <div class="preview-row"><div class="preview-logo violet">M</div><div><strong>MedVA</strong><span>Medical VA · Multi-region</span></div><em class="saved">SAVED</em></div>
+      <div class="preview-footer"><span>Application tracker</span><strong>12 active</strong></div>
     </div>
-    <div class="floating-note note-a"><span>⚡</span><div><b>Fast response</b><small>Clear. Human. Helpful.</small></div></div>
-    <div class="floating-note note-b"><span>✦</span><div><b>Detail checked</b><small>Nothing gets lost.</small></div></div>
+    <div class="floating-note note-a"><span>✓</span><div><b>Track every application</b><small>Applied → Interview → Offer</small></div></div>
+    <div class="floating-note note-b"><span>↗</span><div><b>Visit the real website</b><small>Open official career pages</small></div></div>
   </div>
 </section>
 
-<section class="marquee"><div><span>ADMIN SUPPORT</span><b>✦</b><span>CUSTOMER SERVICE</span><b>✦</b><span>DATA & OPERATIONS</span><b>✦</b><span>DIGITAL SUPPORT</span><b>✦</b><span>ADMIN SUPPORT</span><b>✦</b><span>CUSTOMER SERVICE</span></div></section>
+<section class="marquee"><div><span>DISCOVER</span><b>✦</b><span>VISIT</span><b>✦</b><span>APPLY</span><b>✦</b><span>TRACK</span><b>✦</b><span>INTERVIEW</span><b>✦</b><span>GET HIRED</span><b>✦</b><span>DISCOVER</span><b>✦</b><span>VISIT</span><b>✦</b><span>APPLY</span></div></section>
 
-<section class="section" id="services">
-  <div class="section-head reveal"><div><span class="eyebrow">WHAT I CAN HANDLE</span><h2>Support that moves<br><em>work forward.</em></h2></div><p>Instead of adding another task to your list, VA 100 takes ownership of the details behind it.</p></div>
-  <div class="service-grid">
-    <article class="service-card reveal"><div class="service-number">01</div><div class="service-icon">◎</div><h3>Customer Support</h3><p>Professional email, chat, ticket, and call support that keeps customers informed and cared for.</p><ul><li>Inbox & ticket management</li><li>Order & after-sales support</li><li>Follow-ups & escalation</li></ul><a href="#contact">Discuss support →</a></article>
-    <article class="service-card featured reveal"><div class="service-number">02</div><div class="service-icon">⌘</div><h3>Admin & Operations</h3><p>Reliable day-to-day assistance that keeps records, workflows, schedules, and repetitive tasks under control.</p><ul><li>Data entry & organization</li><li>Order / CRM updates</li><li>Research & documentation</li></ul><a href="#contact">Discuss operations →</a></article>
-    <article class="service-card reveal"><div class="service-number">03</div><div class="service-icon">◇</div><h3>Digital Assistance</h3><p>Practical help across websites, content, simple systems, and digital projects when you need an extra set of capable hands.</p><ul><li>Website content updates</li><li>Basic web support</li><li>Content & asset organization</li></ul><a href="#contact">Discuss a project →</a></article>
+<section class="section directory-section" id="directory">
+  <div class="section-head reveal"><div><span class="eyebrow">VA OPPORTUNITY DIRECTORY</span><h2>Explore. Track.<br><em>Move forward.</em></h2></div><p>Browse the directory from your website instead of opening the spreadsheet. Search, filter, preview, visit, and mark your progress.</p></div>
+
+  <div class="stats-grid reveal">
+    <div class="stat-card"><span>DIRECTORY</span><strong id="totalCount">118</strong><small>agencies & platforms</small></div>
+    <div class="stat-card"><span>APPLIED</span><strong id="appliedCount">0</strong><small>applications submitted</small></div>
+    <div class="stat-card"><span>INTERVIEW</span><strong id="interviewCount">0</strong><small>interviews in progress</small></div>
+    <div class="stat-card"><span>OFFERS</span><strong id="offerCount">0</strong><small>offers tracked</small></div>
   </div>
+
+  <div class="directory-toolbar reveal">
+    <div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search agency, role, region..." autocomplete="off"></div>
+    <select id="scopeFilter"><option value="">All applicant scopes</option></select>
+    <select id="regionFilter"><option value="">All regions</option></select>
+    <select id="statusFilter"><option value="">All statuses</option><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select>
+    <button class="reset-btn" id="resetBtn" type="button">Reset</button>
+  </div>
+
+  <div class="directory-meta"><span id="resultCount">118 opportunities</span><span>Your progress is saved on this device.</span></div>
+  <div class="agency-grid" id="agencyGrid"></div>
+  <div class="empty-state" id="emptyState" hidden><div>⌕</div><h3>No opportunities found</h3><p>Try a different search or filter.</p></div>
 </section>
 
-<section class="section process-section" id="process">
-  <div class="section-head reveal"><div><span class="eyebrow">HOW IT WORKS</span><h2>Simple from<br><em>day one.</em></h2></div><p>No complicated handoff. We define what matters, establish the workflow, and get moving.</p></div>
+<section class="section how-section" id="how">
+  <div class="section-head reveal"><div><span class="eyebrow">HOW VA CONNECT WORKS</span><h2>Your job hunt,<br><em>one workspace.</em></h2></div><p>The directory is designed around the actual steps you take while applying.</p></div>
   <div class="process-grid">
-    <div class="process-line"></div>
-    <article class="process-step reveal"><span>01</span><div class="step-icon">◌</div><h3>Discover</h3><p>We identify your priorities, current workflow, and the tasks that need support.</p></article>
-    <article class="process-step reveal"><span>02</span><div class="step-icon">↗</div><h3>Set Up</h3><p>Tools, access, expectations, communication, and a clear working rhythm are established.</p></article>
-    <article class="process-step reveal"><span>03</span><div class="step-icon">✓</div><h3>Execute</h3><p>Tasks are handled consistently with updates when decisions, blockers, or escalations matter.</p></article>
-    <article class="process-step reveal"><span>04</span><div class="step-icon">∞</div><h3>Improve</h3><p>As the workflow settles, we look for ways to reduce friction and make support more efficient.</p></article>
-  </div>
-</section>
-
-<section class="section work-section" id="work">
-  <div class="section-head reveal"><div><span class="eyebrow">SELECTED WORK</span><h2>Built around<br><em>real work.</em></h2></div><p>Examples of the kind of support, systems, and digital work VA 100 can contribute to.</p></div>
-  <div class="work-grid">
-    <article class="work-card large reveal"><div class="work-art ramen"><div class="mock-browser"><div class="dots">● ● ●</div><div class="mock-content"><span>McKenzie</span><strong>RAMEN<br>HOUSE</strong><small>ORDER • MENU • REVIEWS</small></div></div></div><div class="work-info"><div><span>WEB + CUSTOMER EXPERIENCE</span><h3>McKenzie Ramen House</h3></div><span class="arrow">↗</span></div></article>
-    <article class="work-card reveal"><div class="work-art support-art"><div class="ticket"><small>SUPPORT QUEUE</small><strong>18</strong><span>tickets organized</span><div class="ticket-row"></div><div class="ticket-row short"></div><div class="ticket-row"></div></div></div><div class="work-info"><div><span>OPERATIONS</span><h3>Support Workflow</h3></div><span class="arrow">↗</span></div></article>
-    <article class="work-card reveal"><div class="work-art data-art"><div class="data-sheet"><div class="sheet-title">ORDER CONTROL</div><div class="chart"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sheet-lines"><b></b><b></b><b></b></div></div></div><div class="work-info"><div><span>ADMIN + DATA</span><h3>Order Management</h3></div><span class="arrow">↗</span></div></article>
+    <article class="process-step reveal"><span>01</span><div class="step-icon">⌕</div><h3>Discover</h3><p>Search companies by role, reach, region, or applicant scope.</p></article>
+    <article class="process-step reveal"><span>02</span><div class="step-icon">↗</div><h3>Visit</h3><p>Open the agency's official website or career page directly.</p></article>
+    <article class="process-step reveal"><span>03</span><div class="step-icon">✓</div><h3>Track</h3><p>Mark Saved, Applied, Interview, Offer, Rejected, or Not Eligible.</p></article>
+    <article class="process-step reveal"><span>04</span><div class="step-icon">∞</div><h3>Follow Through</h3><p>Return to your dashboard and focus on the opportunities that need action.</p></article>
   </div>
 </section>
 
 <section class="section about-section" id="about">
-  <div class="about-card reveal"><div class="about-number">100</div><div class="about-copy"><span class="eyebrow">THE VA 100 APPROACH</span><h2>Reliable support.<br><em>Thoughtful solutions.</em></h2><p>Good virtual assistance is more than completing a checklist. It is understanding the outcome behind the task, communicating clearly, protecting the details, and making it easier for a business owner or team to keep moving.</p><div class="pill-row"><span>Detail-oriented</span><span>Customer-focused</span><span>Systems-minded</span><span>Adaptable</span></div></div><div class="about-stats"><div><strong>01</strong><span>Clear communication</span></div><div><strong>02</strong><span>Ownership mindset</span></div><div><strong>03</strong><span>Consistent execution</span></div></div></div>
+  <div class="about-card reveal"><div class="about-logo"><img src="va-connect-logo.png" alt="VA Connect"></div><div class="about-copy"><span class="eyebrow">ABOUT VA CONNECT</span><h2>A smarter way to navigate<br><em>the VA job market.</em></h2><p>VA Connect turns the Global VA Agencies directory into a practical job-search workspace. Instead of repeatedly opening a spreadsheet, users can visually browse opportunities, check eligibility notes, visit the source website, and keep application progress in one place.</p><div class="pill-row"><span>Searchable</span><span>Filterable</span><span>Application tracking</span><span>Official links</span></div></div><div class="about-stats"><div><strong>118</strong><span>directory entries</span></div><div><strong>07</strong><span>tracking stages</span></div><div><strong>100%</strong><span>user-controlled progress</span></div></div></div>
 </section>
 
-<section class="section faq-section">
-  <div class="section-head reveal"><div><span class="eyebrow">QUICK ANSWERS</span><h2>Questions,<br><em>answered.</em></h2></div></div>
-  <div class="faq-list reveal">
-    <button class="faq"><span>What types of tasks can you handle?</span><b>+</b><div>Customer support, inboxes, order and after-sales workflows, data entry, research, documentation, website updates, and other structured digital tasks.</div></button>
-    <button class="faq"><span>Can support be ongoing?</span><b>+</b><div>Yes. Support can be structured around recurring responsibilities, project-based work, or a defined set of operational tasks.</div></button>
-    <button class="faq"><span>How do we communicate?</span><b>+</b><div>Communication can be organized around the tools your workflow already uses, with agreed response expectations and escalation rules.</div></button>
-    <button class="faq"><span>Can you work with existing systems?</span><b>+</b><div>Yes. The goal is to fit into the workflow you already have where practical, rather than forcing unnecessary changes.</div></button>
-  </div>
-</section>
-
-<section class="contact section" id="contact">
-  <div class="contact-inner reveal"><div class="contact-copy"><span class="eyebrow">LET'S WORK TOGETHER</span><h2>Have work that needs<br><em>a reliable owner?</em></h2><p>Tell me what you need help with. I’ll help turn the task list into a clear next step.</p><div class="contact-links"><a href="mailto:hello@va100.example">hello@va100.example ↗</a><span>Remote • Philippines</span></div></div>
-  <form id="contactForm"><label>Your name<input name="name" required placeholder="Your name"></label><label>Email<input name="email" type="email" required placeholder="you@company.com"></label><label>What do you need help with?<select name="service"><option>Customer Support</option><option>Admin & Operations</option><option>Digital Assistance</option><option>Not sure yet</option></select></label><label>Message<textarea name="message" required placeholder="Tell me a little about the work..."></textarea></label><button class="btn primary" type="submit">Send Inquiry <span>→</span></button><p class="form-note" id="formNote"></p></form></div>
+<section class="section tips-section">
+  <div class="tips-card reveal"><div><span class="eyebrow">IMPORTANT</span><h2>Always verify the current opening.</h2><p>Eligibility and hiring status can change. VA Connect uses the directory information as a navigation aid; always review the agency's current website and vacancy before applying.</p></div><a class="btn ghost" href="#directory">Start Exploring →</a></div>
 </section>
 </main>
-<footer><div class="brand"><span class="brand-mark">100</span><span>VA <b>100</b></span></div><p>Virtual assistance, elevated.</p><span>© <span id="year"></span> VA 100</span></footer>
+
+<footer><div class="brand footer-brand"><img src="va-connect-logo.png" alt=""><span>VA <b>CONNECT</b></span></div><span>Connect. Delegate. Elevate.</span><span>© 2026 VA Connect</span></footer>
+
+<div class="modal" id="agencyModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div class="modal-top"><div class="modal-brand"><div class="modal-favicon" id="modalFavicon">VA</div><div><span class="eyebrow">OPPORTUNITY</span><h2 id="modalTitle">Agency</h2></div></div><span class="status-badge" id="modalStatus">NOT STARTED</span></div>
+    <div class="website-preview"><div class="preview-browser"><span>● ● ●</span><small id="modalUrl">website</small></div><iframe id="websiteFrame" title="Website preview" loading="lazy"></iframe><div class="frame-fallback"><strong>Website preview may be blocked.</strong><span>Use the button below to open the official site directly.</span></div></div>
+    <div class="modal-details"><div><span>REACH</span><strong id="modalRegion"></strong></div><div><span>ROLES</span><strong id="modalRoles"></strong></div><div><span>ELIGIBILITY</span><strong id="modalEligibility"></strong></div></div>
+    <div class="modal-actions"><a class="btn primary" id="visitBtn" target="_blank" rel="noopener noreferrer">Visit / Apply ↗</a><select id="modalStatusSelect"><option>Not Started</option><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Not Eligible</option></select></div>
+    <label class="notes-label">PERSONAL NOTE<textarea id="modalNote" placeholder="Add a reminder, interview date, follow-up, salary note, or anything you want to remember..."></textarea></label>
+  </div>
+</div>
+<script src="agencies.js"></script>
 <script src="script.js"></script>
-</body></html>
+</body>
+</html>
