@@ -9,7 +9,7 @@ function rec(id){if(!state[id])state[id]={status:'Not Started',note:'',favorite:
 function save(){localStorage.setItem(email?TSTATE+email:'vaConnectGuestTracker',JSON.stringify(state));render()}
 function tracked(){return(window.VA_AGENCIES||[]).filter(a=>{const r=rec(a.id);return r.favorite||r.status!=='Not Started'})}
 function officialFavicon(a){try{const u=new URL(a.url);return `${u.origin}/favicon.ico`}catch{return ''}}
-function logoFor(a){return ''}
+function logoFor(a){try{const u=new URL(a.url);return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(u.hostname)}&sz=128`}catch{return ''}}
 function logoMarkup(a){
   const src=logoFor(a);const safeName=escapeHtml(a.name);const fallback=initials(a.name);
   if(!src)return `<span class="tracker-logo text-only" aria-label="${safeName}">${fallback}</span>`;

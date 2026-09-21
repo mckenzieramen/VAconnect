@@ -551,3 +551,12 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
   .cover-badge{left:10px;top:10px}
   .cover-status{right:10px;top:10px}
 }
+
+
+/* V38 — stable V1-style screenshot preview + tracker website logos */
+.preview-cover-layer.has-cover{display:flex!important;z-index:4!important;opacity:1!important;visibility:visible!important;background:#061321!important;}
+.preview-cover-layer.has-cover img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;background:#061321!important;}
+.preview-cover-layer.has-cover .preview-cover-label{z-index:5!important;}
+.website-preview iframe{display:none!important;}
+.tracker-logo.has-image{background:#fff!important;}
+.tracker-logo.has-image img{object-fit:contain!important;padding:6px!important;}

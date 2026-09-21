@@ -140,7 +140,9 @@ function officialFavicon(a){
     return `${u.origin}/favicon.ico`;
   }catch{return ''}
 }
-function logoFor(a){ return ''; }
+function logoFor(a){
+  try{ const u=new URL(a.url); return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(u.hostname)}&sz=128`; }catch{return ''}
+}
 function coverFor(a){ return (window.VA_AGENCY_COVERS&&window.VA_AGENCY_COVERS[String(a.id)])||''; }
 function cardBanner(a,index){
   const cover=coverFor(a);
@@ -262,47 +264,43 @@ function openPreview(id){
 
   const frame=$('#websiteFrame'), fallback=$('#frameFallback');
   clearTimeout(frameTimer);
-  let proxyTimer=null;
-  let mode='proxy';
+  let mode='cover';
   const directUrl=activeAgency.url;
   const proxyUrl=`/preview?url=${encodeURIComponent(activeAgency.url)}`;
-  const loading=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>Loading the official website preview…</span>`;
-  const failed=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>This agency's website cannot be embedded reliably in a frame. Use Visit / Apply to open the live official website.</span>`;
-  fallback.classList.add('show');
-  fallback.innerHTML=loading;
-  // Keep the screenshot visible during live-preview loading.
-  frame.style.opacity=cover?'0':'1';
-  frame.style.display='block';
-  frame.setAttribute('aria-hidden','false');
+  const loading=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>Official website screenshot preview</span>`;
+  const failed=`<div class="preview-logo-box">${logo?`<img src="${escapeHtml(logo)}" alt="${escapeHtml(activeAgency.name)} logo" referrerpolicy="no-referrer">`:'<span class="generic-brand-icon">✦</span>'}</div><strong>${escapeHtml(activeAgency.name)}</strong><span>Use Visit / Apply to open the live official website.</span>`;
 
-  const showProxy=()=>{
-    mode='proxy';
-    clearTimeout(proxyTimer);
-    frame.onload=()=>{clearTimeout(frameTimer);fallback.classList.remove('show');frame.style.display='block';frame.style.opacity='1';previewCover.classList.remove('has-cover');};
-    frame.onerror=()=>{frame.style.display=cover?'block':'none';frame.style.opacity=cover?'0':'1';fallback.classList.add('show');fallback.innerHTML=failed;previewCover.classList.toggle('has-cover',!!cover);};
-    frame.src=proxyUrl;
-    proxyTimer=setTimeout(()=>{
-      // Do not leave users staring at an infinite spinner.
-      if(mode==='proxy' && fallback.classList.contains('show')){
-        frame.style.display='none';fallback.classList.add('show');fallback.innerHTML=failed;
-      }
-    },12000);
-  };
-
-  // First try the real site directly. Some agencies permit framing and this
-  // gives those sites the closest possible true live-site experience.
-  mode='direct';
-  frame.onload=()=>{
-    if(mode!=='direct') return;
-    // A successful direct load is enough; keep it live in the iframe.
-    clearTimeout(frameTimer); fallback.classList.remove('show'); frame.style.display='block'; frame.style.opacity='1'; previewCover.classList.remove('has-cover');
-  };
-  frame.onerror=()=>{ if(mode==='direct') showProxy(); };
-  frame.src=directUrl;
-
-  // If the direct site blocks iframe embedding, switch to the same-origin
-  // proxy. This removes normal X-Frame-Options/CSP framing restrictions.
-  frameTimer=setTimeout(()=>{ if(mode==='direct') showProxy(); },4500);
+  // The supplied website screenshot is the stable V1-style Preview. Do not
+  // replace it with an iframe that can remain stuck on an endless loader.
+  if(cover){
+    mode='cover';
+    frame.src='about:blank';
+    frame.style.display='none';
+    frame.style.opacity='0';
+    frame.setAttribute('aria-hidden','true');
+    fallback.classList.remove('show');
+    previewCover.classList.add('has-cover');
+  }else{
+    // Agencies without a supplied screenshot can still use the existing
+    // live/proxy fallback path.
+    fallback.classList.add('show');
+    fallback.innerHTML=loading;
+    frame.style.display='block';
+    frame.style.opacity='1';
+    frame.setAttribute('aria-hidden','false');
+    const showProxy=()=>{
+      mode='proxy';
+      frame.onload=()=>{clearTimeout(frameTimer);fallback.classList.remove('show');frame.style.display='block';frame.style.opacity='1';};
+      frame.onerror=()=>{frame.style.display='none';fallback.classList.add('show');fallback.innerHTML=failed;};
+      frame.src=proxyUrl;
+      frameTimer=setTimeout(()=>{if(mode==='proxy'&&fallback.classList.contains('show')){frame.style.display='none';fallback.innerHTML=failed;}},12000);
+    };
+    mode='direct';
+    frame.onload=()=>{if(mode==='direct'){clearTimeout(frameTimer);fallback.classList.remove('show');}};
+    frame.onerror=()=>{if(mode==='direct')showProxy();};
+    frame.src=directUrl;
+    frameTimer=setTimeout(()=>{if(mode==='direct')showProxy();},4500);
+  }
   $('#agencyModal').classList.add('open');$('#agencyModal').setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
 }
 function closePreview(){clearTimeout(frameTimer);$('#websiteFrame').src='about:blank';$('#websiteFrame').style.display='none';$('#websiteFrame').style.opacity='1';$('#previewCoverLayer')?.classList.remove('has-cover');$('#agencyModal').classList.remove('open');$('#agencyModal').setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');activeAgency=null}

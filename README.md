@@ -132,3 +132,5 @@ V24: Replaced the BELAY cover logo with the user-supplied official positive logo
 
 
 Screenshot cover update: 112 user-provided agency website screenshots are mapped to their matching opportunity cards. Cards without a supplied screenshot retain the existing safe fallback cover behavior.
+
+- V38: Preview now uses the supplied agency website screenshot as the stable V1-style preview when available, avoiding endless live-iframe loading. Tracker Applications now displays website favicon/logo images with initials fallback.
