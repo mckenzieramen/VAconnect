@@ -77,7 +77,7 @@ $('#trackerGoogleSignIn')?.addEventListener('click',async()=>{
     if(msg)msg.textContent='Signed in with Google. Your tracker is now synced to your account.';
   }catch(error){
     const code=error?.code||'';
-    if(msg)msg.textContent=code.includes('popup-closed-by-user')?'Google sign-in was cancelled.':code.includes('popup-blocked')?'Please allow pop-ups for VA CONNECT, then try again.':(error?.message||'Unable to sign in with Google right now.');
+    if(msg)msg.textContent=code.includes('popup-closed-by-user')?'Google sign-in was cancelled.':code.includes('popup-blocked')?'Please allow pop-ups for VA CONNECT, then try again.':code.includes('unauthorized-domain')?'Google sign-in is blocked because this website domain is not authorized in Firebase. Add roadvaconnect.pages.dev under Firebase Authentication → Settings → Authorized domains.':(error?.message||'Unable to sign in with Google right now.');
   }
 });
 $('#trackerCreateAccount')?.addEventListener('click',()=>showTrackerAuth(trackerAuthMode==='create'?'signin':'create'));

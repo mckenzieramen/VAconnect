@@ -161,3 +161,6 @@ Home update (V39): Removed the full Application Tracker workspace from the Home 
 3. Put the Firebase Web App public config values in `firebase-config.js`.
 4. Configure the existing Resend secrets `RESEND_API_KEY` and `RESEND_FROM_EMAIL` for Cloud Functions before deploying `functions`.
 5. Deploy Hosting/Pages files and Functions. The login notification is best-effort on the client so a mail-service outage does not block sign-in.
+
+
+V44 authentication UI update: replaced the placeholder Google “G” with the official multicolor Google G mark (inline SVG) in both account modals. Added a specific unauthorized-domain error message that points to Firebase Authentication → Settings → Authorized domains. No unrelated authentication/data behavior was changed.
