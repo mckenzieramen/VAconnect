@@ -140,26 +140,28 @@ function officialFavicon(a){
     return `${u.origin}/favicon.ico`;
   }catch{return ''}
 }
-function logoFor(a){
-  const local=(window.VA_AGENCY_LOGOS&&window.VA_AGENCY_LOGOS[String(a.id)])||'';
-  return local||officialFavicon(a);
-}
+function logoFor(a){ return ''; }
+function coverFor(a){ return (window.VA_AGENCY_COVERS&&window.VA_AGENCY_COVERS[String(a.id)])||''; }
 function cardBanner(a,index){
+  const cover=coverFor(a);
+  if(cover){
+    return `<div class="card-banner cover-photo" data-agency="${a.id}">
+      <img class="card-cover-image" src="${escapeHtml(cover)}" alt="${escapeHtml(a.name)} official website cover" loading="lazy">
+      <div class="cover-photo-shade" aria-hidden="true"></div>
+      <div class="banner-badge cover-badge"><span>✓</span>#${String(index+1).padStart(2,'0')}</div>
+      <span class="banner-status cover-status">${escapeHtml(getRecord(a.id).status)}</span>
+    </div>`;
+  }
   const b=bannerMap[a.id]||{};
   const theme=b.theme||(['','wing','purple','green','gold','dark'][a.id]||'');
   const headline=b.headline||`${a.name}\nRemote Opportunities`;
   const sub=b.sub||`Explore ${roleLabel(a)} opportunities.`;
   const verified=a.id<=118;
-  const logo=logoFor(a);
-  const logoMarkup=logo
-    ? `<span class="cover-logo-mark has-image"><img src="${escapeHtml(logo)}" alt="${escapeHtml(a.name)} official logo" loading="lazy" referrerpolicy="no-referrer"></span>`
-    : `<span class="cover-logo-mark text-only" aria-hidden="true"><span class="generic-brand-icon">✦</span></span>`;
   return `<div class="card-banner ${theme}" data-agency="${a.id}">
     <div class="banner-badge ${theme}"><span>✓</span>#${String(index+1).padStart(2,'0')}</div>
     <span class="banner-status">${escapeHtml(getRecord(a.id).status)}</span>
     <div class="banner-copy">
-      <div class="cover-logo-lockup" aria-label="${escapeHtml(a.name)} brand mark">
-        ${logoMarkup}
+      <div class="cover-logo-lockup" aria-label="${escapeHtml(a.name)}">
         <span class="cover-logo-name">${escapeHtml(a.name)}</span>
       </div>
       <div class="banner-headline">${escapeHtml(headline).replace(/\\n/g,'<br>')}</div>
