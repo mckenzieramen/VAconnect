@@ -335,6 +335,10 @@ function updateActiveNav(){
   });
 }
 
+function openWelcome(){const modal=$('#welcomeModal');if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false')}}
+function closeWelcome(){const modal=$('#welcomeModal');if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}}
+function openAuth(mode='signin'){const title=$('#authTitle');if(title)title.textContent=mode==='create'?'Create Account':'Sign In';$('#authModal')?.classList.add('open');closeWelcome()}
+
 const header=$('#header'),progress=$('#progress');
 window.addEventListener('scroll',()=>{
   header.classList.toggle('scrolled',scrollY>15);
@@ -347,9 +351,12 @@ $('#menuBtn')?.addEventListener('click',()=>{
 });
 $$('#nav a').forEach(a=>a.addEventListener('click',()=>{$('#nav').classList.remove('mobile-open');$('#menuBtn').textContent='☰'}));
 $('#headerSearchBtn')?.addEventListener('click',()=>{document.querySelector('#directory').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#searchInput').focus(),450)});
-$('#signInBtn')?.addEventListener('click',()=>{if(currentUserEmail){clearUserEmail()}else{$('#authTitle').textContent='Sign In';$('#authModal').classList.add('open')}});
-$('#createAccountBtn')?.addEventListener('click',()=>{if(currentUserEmail){clearUserEmail()}else{$('#authTitle').textContent='Create Account';$('#authModal').classList.add('open')}});
-$('#authEmailForm')?.addEventListener('submit',e=>{e.preventDefault();const ok=setUserEmail($('#authEmail').value);if(ok){$('#authMessage').textContent='Your tracker is now tied to this email on this device. Email reminders are enabled for the 8:00 AM preference.';$('#authModal').classList.remove('open');}else $('#authMessage').textContent='Please enter a valid email address.'});
+$('#signInBtn')?.addEventListener('click',()=>{if(currentUserEmail){clearUserEmail()}else openAuth('signin')});
+$('#createAccountBtn')?.addEventListener('click',()=>{if(currentUserEmail){clearUserEmail()}else openAuth('create')});
+$('#welcomeSignIn')?.addEventListener('click',()=>openAuth('signin'));
+$('#welcomeCreate')?.addEventListener('click',()=>openAuth('create'));
+$('#welcomeGuest')?.addEventListener('click',closeWelcome);
+$('#authEmailForm')?.addEventListener('submit',e=>{e.preventDefault();const ok=setUserEmail($('#authEmail').value);if(ok){$('#authMessage').textContent='Your tracker is now tied to this email on this device. Email reminders are enabled for the 8:00 AM preference.';$('#authModal').classList.remove('open');closeWelcome();}else $('#authMessage').textContent='Please enter a valid email address.'});
 $('#authSignOut')?.addEventListener('click',()=>{clearUserEmail();$('#authModal').classList.remove('open')});
 $$('[data-close-auth]').forEach(x=>x.addEventListener('click',()=>$('#authModal').classList.remove('open')));
 $('#modalClose')?.addEventListener('click',closePreview);
@@ -369,5 +376,8 @@ $('#trackerBrowse')?.addEventListener('click',()=>document.querySelector('#direc
 
 populateFilters();renderCards();updateStats();renderTracker();updateActiveNav();updateAuthUI();
 
+// V40: welcome entry for unsigned visitors; signed-in users go straight to the site.
+(()=>{const params=new URLSearchParams(location.search);const hasAuth=params.get('auth');if(!currentUserEmail&&!hasAuth)setTimeout(openWelcome,180)})();
+
 // V30: support deep links from standalone pages and the tracker.
-(()=>{const params=new URLSearchParams(location.search);const auth=params.get('auth');const previewId=Number(params.get('preview'));if(auth&&['signin','create'].includes(auth)){const title=$('#authTitle');if(title)title.textContent=auth==='create'?'Create Account':'Sign In';$('#authModal')?.classList.add('open')}if(Number.isInteger(previewId)&&previewId>0){setTimeout(()=>openPreview(previewId),80)}})();
+(()=>{const params=new URLSearchParams(location.search);const auth=params.get('auth');const previewId=Number(params.get('preview'));if(auth&&['signin','create'].includes(auth)){openAuth(auth)}if(Number.isInteger(previewId)&&previewId>0){setTimeout(()=>openPreview(previewId),80)}})();
