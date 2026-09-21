@@ -129,3 +129,6 @@ V24: Replaced the BELAY cover logo with the user-supplied official positive logo
 - This was a root-cause JavaScript runtime issue: card rendering could stop before displaying the opportunity content.
 - Preserved the 118 opportunity records, all existing pages, tracker, auth UI, card layout, and logo assets.
 - Preserved the 89 mapped supplied logo assets and official-domain favicon fallback.
+
+
+Screenshot cover update: 112 user-provided agency website screenshots are mapped to their matching opportunity cards. Cards without a supplied screenshot retain the existing safe fallback cover behavior.
