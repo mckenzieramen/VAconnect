@@ -146,3 +146,18 @@ Home update (V39): Removed the full Application Tracker workspace from the Home 
 - Firestore user documents use `users/{uid}` and store the user's email plus tracker state.
 - Added `firebase-config.js` as the public Firebase Web App configuration point. No server credentials are stored in the frontend.
 - The repository previously contained only Firebase server scaffolding and did not contain a Firebase Web App config, so the account backend cannot be live until the Firebase Web App values are connected and Email/Password Authentication is enabled in that Firebase project.
+
+## V42 Authentication + Account Login Email
+- Added Google (Gmail) sign-in via Firebase Authentication.
+- Email/password and Google accounts are isolated by Firebase Auth UID.
+- Each account's tracker is stored under `users/{uid}` in Firestore.
+- Added a callable Firebase Function `sendLoginNotification` that sends an email after an explicit sign-in/account creation using the existing Resend secrets.
+- The login email identifies the sign-in method and timestamp (Asia/Manila).
+- Guest data can be merged into the authenticated user's UID-scoped tracker.
+
+### One-time Firebase console setup
+1. In Firebase Authentication, enable **Email/Password** and **Google** providers.
+2. Add `roadvaconnect.pages.dev` to Authentication > Settings > Authorized domains.
+3. Put the Firebase Web App public config values in `firebase-config.js`.
+4. Configure the existing Resend secrets `RESEND_API_KEY` and `RESEND_FROM_EMAIL` for Cloud Functions before deploying `functions`.
+5. Deploy Hosting/Pages files and Functions. The login notification is best-effort on the client so a mail-service outage does not block sign-in.

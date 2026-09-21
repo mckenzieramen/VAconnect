@@ -68,6 +68,18 @@ window.addEventListener('va:firebase-ready',e=>{if(!e.detail?.configured){const 
 $$('[data-track-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.trackFilter;render()});
 $('#pageSignIn')?.addEventListener('click',()=>showTrackerAuth('signin'));
 $('#trackerAuthForm')?.addEventListener('submit',submitTrackerAuth);
+$('#trackerGoogleSignIn')?.addEventListener('click',async()=>{
+  const msg=$('#trackerAuthMessage');
+  if(!window.VAConnectCloud?.isConfigured()){if(msg)msg.textContent='The account backend is not configured yet. Connect the VA CONNECT Firebase Web App first.';return}
+  try{
+    if(msg)msg.textContent='Opening Google sign-in…';
+    await window.VAConnectCloud.signInWithGoogle();
+    if(msg)msg.textContent='Signed in with Google. Your tracker is now synced to your account.';
+  }catch(error){
+    const code=error?.code||'';
+    if(msg)msg.textContent=code.includes('popup-closed-by-user')?'Google sign-in was cancelled.':code.includes('popup-blocked')?'Please allow pop-ups for VA CONNECT, then try again.':(error?.message||'Unable to sign in with Google right now.');
+  }
+});
 $('#trackerCreateAccount')?.addEventListener('click',()=>showTrackerAuth(trackerAuthMode==='create'?'signin':'create'));
 $('#trackerAuthClose')?.addEventListener('click',hideTrackerAuth);
 $('.tracker-auth-backdrop')?.addEventListener('click',hideTrackerAuth);

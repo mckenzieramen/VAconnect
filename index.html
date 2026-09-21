@@ -131,7 +131,7 @@
     <button class="visit-btn welcome-signin" id="welcomeSignIn" type="button">Sign In to Track Your Progress</button>
     <button class="welcome-create" id="welcomeCreate" type="button">Create / Continue with Email</button>
     <button class="welcome-guest" id="welcomeGuest" type="button">Browse as Guest</button>
-    <small class="welcome-note">Your progress is organized by the email profile you use on this device.</small>
+    <small class="welcome-note">Your progress is securely tied to your account and available across your devices.</small>
   </div>
 </div>
 
@@ -141,7 +141,9 @@
     <button class="modal-close" data-close-auth aria-label="Close">×</button>
     <span class="eyebrow">VA CONNECT ACCOUNT</span>
     <h2 id="authTitle">Sign In</h2>
-    <p id="accountAuthCopy">Use your email to keep Favorites, Applied, Interview and Offer progress organized.</p>
+    <p id="accountAuthCopy">Use Google or your email to keep Favorites, Saved opportunities, Applications, Interviews and Offers unique to your account.</p>
+    <button id="googleSignInBtn" type="button" class="google-auth-btn"><span class="google-auth-icon">G</span> Continue with Google</button>
+    <div class="auth-divider"><span>or continue with email</span></div>
     <form id="authEmailForm" class="email-auth-form">
       <label>Email address<input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" required></label>
       <label>Password<input id="authPassword" type="password" placeholder="At least 6 characters" autocomplete="current-password" minlength="6" required></label>

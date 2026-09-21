@@ -384,6 +384,19 @@ $('#welcomeSignIn')?.addEventListener('click',()=>openAuth('signin'));
 $('#welcomeCreate')?.addEventListener('click',()=>openAuth('create'));
 $('#welcomeGuest')?.addEventListener('click',closeWelcome);
 $('#authEmailForm')?.addEventListener('submit',submitAuthForm);
+$('#googleSignInBtn')?.addEventListener('click',async()=>{
+  const msg=$('#authMessage');
+  if(!window.VAConnectCloud?.isConfigured()){if(msg)msg.textContent='Your Firebase account backend is not connected yet. Add the VA CONNECT Firebase Web App configuration first.';return}
+  try{
+    if(msg)msg.textContent='Opening Google sign-in…';
+    await window.VAConnectCloud.signInWithGoogle();
+    if(msg)msg.textContent='Signed in with Google. Your account data is synced securely.';
+    $('#authModal')?.classList.remove('open');
+  }catch(error){
+    const code=error?.code||'';
+    if(msg)msg.textContent=code.includes('popup-closed-by-user')?'Google sign-in was cancelled.':code.includes('popup-blocked')?'Please allow pop-ups for VA CONNECT, then try again.':(error?.message||'Unable to sign in with Google right now.');
+  }
+});
 $('#authModeToggle')?.addEventListener('click',()=>openAuth(authMode==='create'?'signin':'create'));
 $('#authSignOut')?.addEventListener('click',()=>window.VAConnectCloud?.signOut());
 $$('[data-close-auth]').forEach(x=>x.addEventListener('click',()=>$('#authModal').classList.remove('open')));

@@ -571,3 +571,10 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
 .tracker-auth-panel{position:relative;width:min(500px,94vw);padding:34px 30px 28px;border:1px solid rgba(0,217,255,.32);border-radius:22px;background:linear-gradient(145deg,#071b2d,#030e1b 78%);box-shadow:0 30px 100px rgba(0,0,0,.55),0 0 45px rgba(0,183,255,.08)}.tracker-auth-panel h2{font:700 30px/1.08 "Space Grotesk",sans-serif;letter-spacing:-.03em;margin:11px 0}.tracker-auth-panel>p{color:#8fa8bb;font-size:12px;line-height:1.7;margin:0 0 14px}.tracker-auth-panel .modal-close{position:absolute;right:14px;top:12px}
 .tracker-locked{position:relative}.tracker-locked::after{content:"Sign in to unlock your application tracker";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;min-width:min(340px,82%);padding:14px 18px;text-align:center;border:1px solid rgba(0,217,255,.35);border-radius:14px;background:rgba(2,14,27,.88);box-shadow:0 18px 55px rgba(0,0,0,.35);color:#dffaff;font-size:11px;font-weight:800;pointer-events:none}.tracker-locked .tracker-row{filter:blur(1.2px);opacity:.52}.tracker-locked .tracker-actions,.tracker-locked .tracker-stage{pointer-events:none}
 @media(max-width:620px){.tracker-auth-panel{padding:30px 20px 24px}.tracker-locked::after{font-size:10px;min-width:70%}}
+
+/* V42 authentication */
+.google-auth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 12px;padding:12px 16px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.06);color:#fff;font:600 14px Inter,sans-serif;cursor:pointer;transition:.2s ease}
+.google-auth-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(74,213,255,.45);transform:translateY(-1px)}
+.google-auth-icon{width:18px;height:18px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#4285f4;font-weight:800;font-size:12px}
+.auth-divider{display:flex;align-items:center;gap:10px;color:#8ea1b7;font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin:10px 0}
+.auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:rgba(255,255,255,.1)}
