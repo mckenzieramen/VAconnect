@@ -5,36 +5,103 @@ const statuses=['Not Started','Saved','Applied','Interview','Offer','Rejected','
 const legacyStateKey='vaConnectReferenceV11';
 const userKey='vaConnectUserEmail';
 const guestStateKey='vaConnectGuestTracker';
-let currentUserEmail=(localStorage.getItem(userKey)||'').trim().toLowerCase();
+let currentUserEmail='';
 let state=loadStoredState();
 let activeAgency=null, frameTimer=null;
+let authMode='signin';
+let firebaseConfigured=false;
+let authResolved=false;
+let cloudSaveTimer=null;
 
 function loadStoredState(){
-  const key=currentUserEmail?`vaConnectTracker:${currentUserEmail}`:guestStateKey;
-  try{return JSON.parse(localStorage.getItem(key)||localStorage.getItem(legacyStateKey)||'{}')||{}}catch{return {}}
+  try{return JSON.parse(localStorage.getItem(guestStateKey)||localStorage.getItem(legacyStateKey)||'{}')||{}}catch{return {}}
 }
-function setUserEmail(email){
-  const normalized=String(email||'').trim().toLowerCase();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) return false;
-  const previous=state;
-  currentUserEmail=normalized;
-  localStorage.setItem(userKey,normalized);
-  const userKeyName=`vaConnectTracker:${normalized}`;
-  const existing=localStorage.getItem(userKeyName);
-  state=existing?loadStoredState():previous;
-  localStorage.setItem(userKeyName,JSON.stringify(state));
-  renderCards();updateStats();renderTracker();updateAuthUI();
-  return true;
+function cloneState(value){try{return JSON.parse(JSON.stringify(value||{}))}catch{return {}}}
+function mergeStates(primary, secondary){
+  const out=cloneState(primary);
+  Object.entries(secondary||{}).forEach(([id,rec])=>{if(!out[id])out[id]=cloneState(rec)});
+  return out;
 }
-function clearUserEmail(){currentUserEmail='';localStorage.removeItem(userKey);state=loadStoredState();renderCards();updateStats();renderTracker();updateAuthUI();}
+function setUserState(next){state=cloneState(next);renderCards();updateStats();renderTracker();updateAuthUI()}
+async function handleFirebaseAuth(detail){
+  if(detail.loading)return;
+  authResolved=true;
+  if(detail.user){
+    currentUserEmail=(detail.user.email||'').trim().toLowerCase();
+    localStorage.setItem(userKey,currentUserEmail);
+    const guest=loadStoredState();
+    const cloud=detail.tracker||{};
+    state=mergeStates(cloud,guest);
+    try{await window.VAConnectCloud.saveTracker(detail.user,state)}catch(error){console.warn('VA CONNECT cloud sync failed:',error)}
+    localStorage.setItem(`vaConnectTracker:${currentUserEmail}`,JSON.stringify(state));
+    updateAuthUI();renderCards();updateStats();renderTracker();closeWelcome();
+  }else{
+    currentUserEmail='';
+    localStorage.removeItem(userKey);
+    state=loadStoredState();
+    updateAuthUI();renderCards();updateStats();renderTracker();
+  }
+}
+function saveState(){
+  localStorage.setItem(currentUserEmail?`vaConnectTracker:${currentUserEmail}`:guestStateKey,JSON.stringify(state));
+  updateStats();renderTracker();
+  const el=$('#saveIndicator');if(el){el.textContent=currentUserEmail?'Saved to your account':'Saved on this device';clearTimeout(saveState.t);saveState.t=setTimeout(()=>el.textContent=currentUserEmail?'Synced to your account':'Your progress is saved automatically',1200)}
+  if(currentUserEmail&&window.VAConnectCloud?.isConfigured()){
+    clearTimeout(cloudSaveTimer);
+    cloudSaveTimer=setTimeout(async()=>{try{await window.VAConnectCloud.saveTracker(window.VAConnectCloud.currentUser(),state)}catch(error){console.warn('Cloud save failed:',error)}},250);
+  }
+}
+function getRecord(id){
+  if(!state[id])state[id]={status:'Not Started',note:'',favorite:false};
+  if(typeof state[id].favorite!=='boolean')state[id].favorite=false;
+  return state[id];
+}
+function getStatusCounts(){
+  const values=Object.values(state);
+  return {applied:values.filter(x=>['Applied','Interview','Offer'].includes(x.status)).length,interview:values.filter(x=>x.status==='Interview').length,offer:values.filter(x=>x.status==='Offer').length};
+}
+function updateStats(){
+  const c=getStatusCounts();
+  ['appliedCount','heroApplied'].forEach(id=>{const e=$('#'+id);if(e)e.textContent=c.applied});
+  ['interviewCount','heroInterview'].forEach(id=>{const e=$('#'+id);if(e)e.textContent=c.interview});
+  ['offerCount','heroOffer'].forEach(id=>{const e=$('#'+id);if(e)e.textContent=c.offer});
+  const total=$('#heroTotal');if(total)total.textContent=(window.VA_AGENCIES?.length||118)+'+';
+}
 function updateAuthUI(){
   const signed=!!currentUserEmail;
   const sign=$('#signInBtn'),create=$('#createAccountBtn');
-  if(sign) sign.textContent=signed?currentUserEmail:'Sign In';
-  if(create) create.textContent=signed?'Sign Out':'Create Account';
+  if(sign)sign.textContent=signed?currentUserEmail:'Sign In';
+  if(create)create.textContent=signed?'Sign Out':'Create Account';
   const email=$('#authEmail'),account=$('#authAccountState');
-  if(email && signed) email.value=currentUserEmail;
-  if(account) account.textContent=signed?`Signed in as ${currentUserEmail}`:'Sign in with your email to keep your tracker organized.';
+  if(email&&signed)email.value=currentUserEmail;
+  if(account)account.textContent=signed?`Signed in as ${currentUserEmail}`:'Sign in to keep your tracker synced across devices.';
+  const signout=$('#authSignOut');if(signout)signout.style.display=signed?'inline-flex':'none';
+}
+let trackerFilter='all';
+function trackedAgencies(){return(window.VA_AGENCIES||[]).filter(a=>getRecord(a.id).status!=='Not Started'||getRecord(a.id).favorite)}
+function trackerRow(a){
+  const r=getRecord(a.id),statusClass=r.status.toLowerCase().replace(/\s+/g,'-'),logo=logoFor(a);
+  const logoBox=logo?`<span class="tracker-logo has-image"><img src="${escapeHtml(logo)}" alt="${escapeHtml(a.name)} logo" loading="lazy" referrerpolicy="no-referrer"></span>`:`<span class="tracker-logo text-only" aria-hidden="true"><span class="generic-brand-icon">✦</span></span>`;
+  return `<article class="tracker-row" data-track-id="${a.id}"><div class="tracker-company">${logoBox}<div><strong>${escapeHtml(a.name)}</strong><small>${escapeHtml(regionPrimary(a))} · ${escapeHtml(roleLabel(a))}</small></div></div><div class="tracker-stage"><span class="tracker-stage-dot ${statusClass}"></span><select class="tracker-stage-select" data-track-status="${a.id}" aria-label="Update ${escapeHtml(a.name)} status">${statuses.map(s=>`<option${r.status===s?' selected':''}>${s}</option>`).join('')}</select></div><div class="tracker-note">${r.note?escapeHtml(r.note):'No personal note added'}</div><div class="tracker-actions"><button type="button" class="tracker-open" data-track-open="${a.id}">View</button><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-track-apply="${a.id}">Apply ↗</a></div></article>`;
+}
+function renderTracker(){
+  const tracked=trackedAgencies(),counts={Saved:0,Applied:0,Interview:0,Offer:0};
+  tracked.forEach(a=>{const st=getRecord(a.id).status;if(counts[st]!==undefined)counts[st]++});
+  const all=$('#trackAllCount');if(all)all.textContent=tracked.length;
+  const saved=$('#trackSavedCount');if(saved)saved.textContent=counts.Saved;
+  const applied=$('#trackAppliedCount');if(applied)applied.textContent=counts.Applied;
+  const interview=$('#trackInterviewCount');if(interview)interview.textContent=counts.Interview;
+  const offer=$('#trackOfferCount');if(offer)offer.textContent=counts.Offer;
+  const list=trackerFilter==='all'?tracked:tracked.filter(a=>getRecord(a.id).status===trackerFilter);
+  const title=$('#trackerTitle'),subtitle=$('#trackerSubtitle');
+  if(title)title.textContent=trackerFilter==='all'?'All Tracked Opportunities':`${trackerFilter} Opportunities`;
+  if(subtitle)subtitle.textContent=list.length?`${list.length} ${list.length===1?'opportunity':'opportunities'} in this stage.`:'Nothing is in this stage yet.';
+  const container=$('#trackerList'),empty=$('#trackerEmpty');
+  if(container)container.innerHTML=list.map(trackerRow).join('');
+  if(empty)empty.hidden=list.length!==0;
+  $$('.tracker-stat').forEach(btn=>btn.classList.toggle('active',(btn.dataset.trackFilter||'all')===trackerFilter));
+  $$('#trackerList [data-track-open]').forEach(btn=>btn.addEventListener('click',()=>openPreview(Number(btn.dataset.trackOpen))));
+  $$('#trackerList [data-track-status]').forEach(select=>select.addEventListener('change',()=>{getRecord(Number(select.dataset.trackStatus)).status=select.value;saveState()}));
 }
 
 
@@ -56,73 +123,6 @@ const bannerMap={
   6:{theme:'dark',headline:'Do More\\nWith the Right Support',sub:'Virtual assistants for busy professionals and growing businesses.'}
 };
 
-function getRecord(id){
-  if(!state[id]) state[id]={status:'Not Started',note:'',favorite:false};
-  if(typeof state[id].favorite!=='boolean') state[id].favorite=false;
-  return state[id];
-}
-function saveState(){
-  const stateKey=currentUserEmail?`vaConnectTracker:${currentUserEmail}`:guestStateKey;
-  localStorage.setItem(stateKey,JSON.stringify(state));
-  updateStats();
-  renderTracker();
-  const el=$('#saveIndicator'); if(el){el.textContent='Saved just now';clearTimeout(saveState.t);saveState.t=setTimeout(()=>el.textContent='Your progress is saved automatically',1200);}
-}
-function getStatusCounts(){
-  const values=Object.values(state);
-  return {
-    applied:values.filter(x=>['Applied','Interview','Offer'].includes(x.status)).length,
-    interview:values.filter(x=>x.status==='Interview').length,
-    offer:values.filter(x=>x.status==='Offer').length
-  };
-}
-function updateStats(){
-  const c=getStatusCounts();
-  ['appliedCount','heroApplied'].forEach(id=>{const e=$('#'+id);if(e)e.textContent=c.applied});
-  ['interviewCount','heroInterview'].forEach(id=>{const e=$('#'+id);if(e)e.textContent=c.interview});
-  ['offerCount','heroOffer'].forEach(id=>{const e=$('#'+id);if(e)e.textContent=c.offer});
-  const total=$('#heroTotal');if(total)total.textContent=(window.VA_AGENCIES?.length||118)+'+';
-}
-
-let trackerFilter='all';
-function trackedAgencies(){
-  return (window.VA_AGENCIES||[]).filter(a=>getRecord(a.id).status!=='Not Started');
-}
-function trackerRow(a){
-  const r=getRecord(a.id);
-  const statusClass=r.status.toLowerCase().replace(/\s+/g,'-');
-  const logo=logoFor(a);
-  const logoBox=logo
-    ? `<span class="tracker-logo has-image"><img src="${escapeHtml(logo)}" alt="${escapeHtml(a.name)} logo" loading="lazy" referrerpolicy="no-referrer"></span>`
-    : `<span class="tracker-logo text-only" aria-hidden="true"><span class="generic-brand-icon">✦</span></span>`;
-  return `<article class="tracker-row" data-track-id="${a.id}">
-    <div class="tracker-company">${logoBox}<div><strong>${escapeHtml(a.name)}</strong><small>${escapeHtml(regionPrimary(a))} · ${escapeHtml(roleLabel(a))}</small></div></div>
-    <div class="tracker-stage"><span class="tracker-stage-dot ${statusClass}"></span><select class="tracker-stage-select" data-track-status="${a.id}" aria-label="Update ${escapeHtml(a.name)} status">${statuses.map(s=>`<option${r.status===s?' selected':''}>${s}</option>`).join('')}</select></div>
-    <div class="tracker-note">${r.note?escapeHtml(r.note):'No personal note added'}</div>
-    <div class="tracker-actions"><button type="button" class="tracker-open" data-track-open="${a.id}">View</button><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" data-track-apply="${a.id}">Apply ↗</a></div>
-  </article>`;
-}
-function renderTracker(){
-  const agencies=window.VA_AGENCIES||[];
-  const tracked=trackedAgencies();
-  const counts={Saved:0,Applied:0,Interview:0,Offer:0};
-  tracked.forEach(a=>{const st=getRecord(a.id).status;if(counts[st]!==undefined)counts[st]++});
-  const all=$('#trackAllCount');if(all)all.textContent=tracked.length;
-  const saved=$('#trackSavedCount');if(saved)saved.textContent=counts.Saved;
-  const applied=$('#trackAppliedCount');if(applied)applied.textContent=counts.Applied;
-  const interview=$('#trackInterviewCount');if(interview)interview.textContent=counts.Interview;
-  const offer=$('#trackOfferCount');if(offer)offer.textContent=counts.Offer;
-  const list=trackerFilter==='all'?tracked:tracked.filter(a=>getRecord(a.id).status===trackerFilter);
-  const title=$('#trackerTitle'),subtitle=$('#trackerSubtitle');
-  if(title)title.textContent=trackerFilter==='all'?'All Tracked Opportunities':`${trackerFilter} Opportunities`;
-  if(subtitle)subtitle.textContent=list.length?`${list.length} ${list.length===1?'opportunity':'opportunities'} in this stage.`:'Nothing is in this stage yet.';
-  const container=$('#trackerList'),empty=$('#trackerEmpty');
-  if(container)container.innerHTML=list.map(trackerRow).join('');
-  if(empty)empty.hidden=list.length!==0;
-  $$('.tracker-stat').forEach(btn=>btn.classList.toggle('active',(btn.dataset.trackFilter||'all')===trackerFilter));
-  $$('#trackerList [data-track-open]').forEach(btn=>btn.addEventListener('click',()=>openPreview(Number(btn.dataset.trackOpen))));
-  $$('#trackerList [data-track-status]').forEach(select=>select.addEventListener('change',()=>{getRecord(Number(select.dataset.trackStatus)).status=select.value;saveState();}));
-}
 function hostname(url){try{return new URL(url).hostname.replace(/^www\./,'www.')}catch{return 'official website'}}
 function regionPrimary(a){return (a.region||'Global').split('/')[0].trim()}
 function tagsFor(a){
@@ -337,7 +337,34 @@ function updateActiveNav(){
 
 function openWelcome(){const modal=$('#welcomeModal');if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false')}}
 function closeWelcome(){const modal=$('#welcomeModal');if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}}
-function openAuth(mode='signin'){const title=$('#authTitle');if(title)title.textContent=mode==='create'?'Create Account':'Sign In';$('#authModal')?.classList.add('open');closeWelcome()}
+function openAuth(mode='signin'){
+  authMode=mode==='create'?'create':'signin';
+  const title=$('#authTitle'),submit=$('#authSubmit'),toggle=$('#authModeToggle'),password=$('#authPassword');
+  if(title)title.textContent=authMode==='create'?'Create Account':'Sign In';
+  if(submit)submit.textContent=authMode==='create'?'Create Account':'Sign In';
+  if(toggle)toggle.textContent=authMode==='create'?'Already have an account? Sign in':'Need an account? Create one';
+  if(password)password.autocomplete=authMode==='create'?'new-password':'current-password';
+  $('#authModal')?.classList.add('open');closeWelcome();
+}
+async function submitAuthForm(e){
+  e.preventDefault();
+  const email=String($('#authEmail')?.value||'').trim().toLowerCase();
+  const password=String($('#authPassword')?.value||'');
+  const msg=$('#authMessage');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){if(msg)msg.textContent='Please enter a valid email address.';return}
+  if(password.length<6){if(msg)msg.textContent='Password must be at least 6 characters.';return}
+  if(!window.VAConnectCloud?.isConfigured()){if(msg)msg.textContent='Your Firebase account backend is not connected yet. Add the VA CONNECT Firebase Web App configuration first.';return}
+  try{
+    if(msg)msg.textContent=authMode==='create'?'Creating your secure account…':'Signing you in…';
+    if(authMode==='create')await window.VAConnectCloud.createAccount(email,password);else await window.VAConnectCloud.signIn(email,password);
+    $('#authModal')?.classList.remove('open');
+  }catch(error){
+    const code=error?.code||'';
+    const text=code.includes('email-already-in-use')?'That email already has an account. Switch to Sign In.':code.includes('invalid-credential')||code.includes('invalid-login-credentials')?'Email or password is incorrect.':code.includes('weak-password')?'Choose a stronger password.':(error?.message||'Unable to sign in right now.');
+    if(msg)msg.textContent=text;
+  }
+}
+
 
 const header=$('#header'),progress=$('#progress');
 window.addEventListener('scroll',()=>{
@@ -351,13 +378,14 @@ $('#menuBtn')?.addEventListener('click',()=>{
 });
 $$('#nav a').forEach(a=>a.addEventListener('click',()=>{$('#nav').classList.remove('mobile-open');$('#menuBtn').textContent='☰'}));
 $('#headerSearchBtn')?.addEventListener('click',()=>{document.querySelector('#directory').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#searchInput').focus(),450)});
-$('#signInBtn')?.addEventListener('click',()=>{if(currentUserEmail){clearUserEmail()}else openAuth('signin')});
-$('#createAccountBtn')?.addEventListener('click',()=>{if(currentUserEmail){clearUserEmail()}else openAuth('create')});
+$('#signInBtn')?.addEventListener('click',()=>{if(currentUserEmail)window.VAConnectCloud?.signOut();else openAuth('signin')});
+$('#createAccountBtn')?.addEventListener('click',()=>{if(currentUserEmail)window.VAConnectCloud?.signOut();else openAuth('create')});
 $('#welcomeSignIn')?.addEventListener('click',()=>openAuth('signin'));
 $('#welcomeCreate')?.addEventListener('click',()=>openAuth('create'));
 $('#welcomeGuest')?.addEventListener('click',closeWelcome);
-$('#authEmailForm')?.addEventListener('submit',e=>{e.preventDefault();const ok=setUserEmail($('#authEmail').value);if(ok){$('#authMessage').textContent='Your tracker is now tied to this email on this device. Email reminders are enabled for the 8:00 AM preference.';$('#authModal').classList.remove('open');closeWelcome();}else $('#authMessage').textContent='Please enter a valid email address.'});
-$('#authSignOut')?.addEventListener('click',()=>{clearUserEmail();$('#authModal').classList.remove('open')});
+$('#authEmailForm')?.addEventListener('submit',submitAuthForm);
+$('#authModeToggle')?.addEventListener('click',()=>openAuth(authMode==='create'?'signin':'create'));
+$('#authSignOut')?.addEventListener('click',()=>window.VAConnectCloud?.signOut());
 $$('[data-close-auth]').forEach(x=>x.addEventListener('click',()=>$('#authModal').classList.remove('open')));
 $('#modalClose')?.addEventListener('click',closePreview);
 $$('[data-close-modal]').forEach(x=>x.addEventListener('click',closePreview));
@@ -376,8 +404,12 @@ $('#trackerBrowse')?.addEventListener('click',()=>document.querySelector('#direc
 
 populateFilters();renderCards();updateStats();renderTracker();updateActiveNav();updateAuthUI();
 
-// V40: welcome entry for unsigned visitors; signed-in users go straight to the site.
-(()=>{const params=new URLSearchParams(location.search);const hasAuth=params.get('auth');if(!currentUserEmail&&!hasAuth)setTimeout(openWelcome,180)})();
+window.addEventListener('va:firebase-ready',e=>{firebaseConfigured=!!e.detail?.configured; if(!firebaseConfigured){authResolved=true;const msg=$('#authMessage');if(msg)msg.textContent='Account sync needs the VA CONNECT Firebase Web App configuration.';}});
+window.addEventListener('va:auth-state',e=>{handleFirebaseAuth(e.detail||{})});
+
+// V41: unsigned visitors may browse and save locally, but account-only progress
+// becomes available after Firebase Authentication signs them in.
+(()=>{const params=new URLSearchParams(location.search);const hasAuth=params.get('auth');if(!hasAuth)setTimeout(()=>{if(authResolved&&!currentUserEmail)openWelcome()},450)})();
 
 // V30: support deep links from standalone pages and the tracker.
 (()=>{const params=new URLSearchParams(location.search);const auth=params.get('auth');const previewId=Number(params.get('preview'));if(auth&&['signin','create'].includes(auth)){openAuth(auth)}if(Number.isInteger(previewId)&&previewId>0){setTimeout(()=>openPreview(previewId),80)}})();

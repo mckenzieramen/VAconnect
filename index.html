@@ -144,10 +144,12 @@
     <p id="accountAuthCopy">Use your email to keep Favorites, Applied, Interview and Offer progress organized.</p>
     <form id="authEmailForm" class="email-auth-form">
       <label>Email address<input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" required></label>
-      <button class="visit-btn" type="submit">Continue with Email</button>
+      <label>Password<input id="authPassword" type="password" placeholder="At least 6 characters" autocomplete="current-password" minlength="6" required></label>
+      <button class="visit-btn" id="authSubmit" type="submit">Sign In</button>
     </form>
+    <button id="authModeToggle" type="button" class="auth-mode-toggle">Need an account? Create one</button>
     <small id="accountAuthState">Sign in with your email to keep your tracker organized.</small>
-    <p id="authMessage" class="auth-message">Your 8:00 AM reminder preference is part of your tracker profile.</p>
+    <p id="authMessage" class="auth-message">Your account keeps your tracker synced across devices.</p>
     <button id="authSignOut" type="button" class="auth-signout">Sign out</button>
   </div>
 </div>
@@ -155,6 +157,8 @@
 <script src="agencies.js"></script>
 <script src="agency-logo-map.js"></script>
 <script src="agency-cover-map.js"></script>
+<script src="firebase-config.js"></script>
 <script src="script.js"></script>
+<script type="module" src="firebase-client.js"></script>
 </body>
 </html>

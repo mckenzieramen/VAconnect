@@ -136,3 +136,13 @@ Screenshot cover update: 112 user-provided agency website screenshots are mapped
 - V38: Preview now uses the supplied agency website screenshot as the stable V1-style preview when available, avoiding endless live-iframe loading. Tracker Applications now displays website favicon/logo images with initials fallback.
 
 Home update (V39): Removed the full Application Tracker workspace from the Home page. The tracker remains available only on the dedicated Track Applications page; existing tracking logic/data and navigation were preserved.
+
+## V41 — Account-backed Tracker Architecture
+- Guest visitors can browse and save/favorite opportunities locally.
+- The dedicated Track Applications page now shows a guest's saved/tracked opportunities but locks application-progress controls until sign-in.
+- Opening the tracker while signed out presents a sign-in popup; the guest list remains visible behind the locked state.
+- Added Firebase Authentication (email/password) and Firestore sync architecture for real per-account tracker data.
+- On successful sign-in, guest tracker records are merged into the signed-in user's Firestore profile and then synced on tracker changes.
+- Firestore user documents use `users/{uid}` and store the user's email plus tracker state.
+- Added `firebase-config.js` as the public Firebase Web App configuration point. No server credentials are stored in the frontend.
+- The repository previously contained only Firebase server scaffolding and did not contain a Firebase Web App config, so the account backend cannot be live until the Firebase Web App values are connected and Email/Password Authentication is enabled in that Firebase project.
