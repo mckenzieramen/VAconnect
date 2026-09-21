@@ -449,3 +449,105 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
 .cover-status{right:12px;top:12px;}
 .cover-photo .banner-badge,.cover-photo .banner-status{backdrop-filter:blur(10px);box-shadow:0 8px 20px rgba(0,0,0,.22);}
 @media(max-width:620px){.card-cover-image{object-position:center center}.cover-badge{left:10px;top:10px}.cover-status{right:10px;top:10px}}
+
+
+/* =========================================================
+   V35 — SAFE WEBSITE SCREENSHOT COVER SYSTEM
+   Covers are static screenshots. The display layer clips the
+   browser/address-bar area without modifying source images.
+   ========================================================= */
+.card-banner.cover-photo{
+  position:relative;
+  height:184px;
+  min-height:184px;
+  overflow:hidden;
+  background:#061321;
+  isolation:isolate;
+}
+.card-banner.cover-photo:before,
+.card-banner.cover-photo:after{display:none!important}
+.card-cover-image{
+  position:absolute!important;
+  z-index:0!important;
+  left:-2%!important;
+  top:-12%!important;
+  width:104%!important;
+  height:124%!important;
+  max-width:none!important;
+  max-height:none!important;
+  display:block;
+  object-fit:cover!important;
+  object-position:center 56%!important;
+  border:0!important;
+  outline:0!important;
+  transform:scale(1.035);
+  transform-origin:center center;
+  transition:transform .35s ease,filter .35s ease;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+.card-banner.cover-photo:hover .card-cover-image{
+  transform:scale(1.065);
+}
+.cover-photo-shade{
+  position:absolute!important;
+  inset:0;
+  z-index:2!important;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(3,12,25,.04) 0%,rgba(3,12,25,.04) 52%,rgba(3,12,25,.42) 100%);
+}
+.cover-badge,.cover-status{
+  z-index:4!important;
+  position:absolute!important;
+}
+.cover-badge{left:12px;top:12px}
+.cover-status{right:12px;top:12px}
+.cover-photo .banner-badge,.cover-photo .banner-status{
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+/* Broken/missing cover fallback — prevents broken-image icons. */
+.card-banner.cover-photo .agency-cover-fallback{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  overflow:hidden;
+  background:linear-gradient(135deg,#071426 0%,#0a2140 50%,#071426 100%);
+  color:#eaf8ff;
+  font:800 24px/1.15 "Space Grotesk",sans-serif;
+  text-align:center;
+}
+.card-banner.cover-photo .agency-cover-fallback-glow{
+  position:absolute;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:rgba(0,217,255,.16);
+  filter:blur(45px);
+}
+.card-banner.cover-photo .agency-cover-fallback span{position:relative;z-index:2}
+.card-banner.cover-photo:not(.image-failed) .agency-cover-fallback{
+  opacity:0;
+  pointer-events:none;
+}
+.card-banner.cover-photo.image-failed .agency-cover-fallback{
+  opacity:1;
+}
+.card-banner.cover-photo.image-failed .cover-photo-shade{display:none}
+
+@media(max-width:620px){
+  .card-banner.cover-photo{height:190px;min-height:190px}
+  .card-cover-image{
+    top:-13%!important;
+    height:126%!important;
+    object-position:center 56%!important;
+  }
+  .cover-badge{left:10px;top:10px}
+  .cover-status{right:10px;top:10px}
+}

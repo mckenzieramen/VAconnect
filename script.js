@@ -145,8 +145,10 @@ function coverFor(a){ return (window.VA_AGENCY_COVERS&&window.VA_AGENCY_COVERS[S
 function cardBanner(a,index){
   const cover=coverFor(a);
   if(cover){
+    const safeName=escapeHtml(a.name);
     return `<div class="card-banner cover-photo" data-agency="${a.id}">
-      <img class="card-cover-image" src="${escapeHtml(cover)}" alt="${escapeHtml(a.name)} official website cover" loading="lazy">
+      <img class="card-cover-image" src="${escapeHtml(cover)}" alt="${safeName} official website cover" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('image-failed');">
+      <div class="agency-cover-fallback" aria-hidden="true"><div class="agency-cover-fallback-glow"></div><span>${safeName}</span></div>
       <div class="cover-photo-shade" aria-hidden="true"></div>
       <div class="banner-badge cover-badge"><span>✓</span>#${String(index+1).padStart(2,'0')}</div>
       <span class="banner-status cover-status">${escapeHtml(getRecord(a.id).status)}</span>
